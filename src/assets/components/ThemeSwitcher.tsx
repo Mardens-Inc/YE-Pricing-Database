@@ -5,7 +5,7 @@ import $ from "jquery"
 
 export default function ThemeSwitcher() {
     return (
-        <Switch size="lg" color="success" startContent={<SunIcon/>} endContent={<MoonIcon/>} defaultSelected={getCurrentTheme() === themes.light} onValueChange={(value) => {
+        <Switch size="lg" startContent={<SunIcon/>} endContent={<MoonIcon/>} defaultSelected={getCurrentTheme() === themes.light} onValueChange={(value) => {
             applyTheme(value ? themes.light : themes.dark)
         }}/>
     );
