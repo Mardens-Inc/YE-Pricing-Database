@@ -1,6 +1,8 @@
 import {Navbar, NavbarContent, NavbarItem} from "@nextui-org/navbar";
 import ThemeSwitcher from "./ThemeSwitcher.tsx";
 import {Link} from "@nextui-org/react";
+import MardensLogo from "./MardensLogo.tsx";
+
 
 export default function Navigation()
 {
@@ -9,7 +11,7 @@ export default function Navigation()
         <Navbar maxWidth={"full"}>
             <NavbarContent justify="start">
                 <NavbarItem className={"font-bold"}>
-                    <Link href="/">Years End Inventory Pricing Database</Link>
+                    <Link href="/"><MardensLogo height={"2rem"} color={"#f13848"} /></Link>
                 </NavbarItem>
             </NavbarContent>
             <NavbarContent justify="end">
