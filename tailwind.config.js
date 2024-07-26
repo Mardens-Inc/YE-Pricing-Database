@@ -20,7 +20,7 @@ export default {
                         foreground: "#fff",
                     },
                     secondary: "#2b2b2b",
-                    background: "#f0f0f4",
+                    background: "#e3e3ea",
 
                 }
             },
