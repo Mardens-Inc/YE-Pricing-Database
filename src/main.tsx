@@ -11,6 +11,7 @@ import LoginPage from "./assets/pages/LoginPage.tsx";
 import StoresPage from "./assets/pages/StoresPage.tsx";
 import Stores from "./assets/ts/stores.ts";
 import DepartmentsPage from "./assets/pages/DepartmentsPage.tsx";
+import ProcessingPage from "./assets/pages/ProcessingPage.tsx";
 
 applyTheme();
 
@@ -42,10 +43,10 @@ function PageContent()
             <Navigation/>
             <Routes>
                 <Route>
-                    <Route path="/" element={<></>}/>
-                    <Route path="/login" element={<LoginPage/>}/>
+                    <Route path="/" element={<LoginPage/>}/>
                     <Route path="/stores" element={<StoresPage/>}/>
                     <Route path="/stores/:store" element={<DepartmentsPage/>}/>
+                    <Route path="/stores/:store/:department" element={<ProcessingPage/>}/>
                 </Route>
             </Routes>
         </NextUIProvider>
