@@ -11,7 +11,7 @@ export default class Stores
 {
     static async init(): Promise<void>
     {
-        const stores: Store[] = await $.get("https://lib.mardens.com/stores.json");
+        const stores: Store[] = await $.get("https://lib.mardens.com/stores/");
         localStorage.setItem("stores", JSON.stringify(stores));
     }
 
