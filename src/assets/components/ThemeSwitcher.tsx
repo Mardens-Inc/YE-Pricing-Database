@@ -1,13 +1,31 @@
-import {Switch} from "@nextui-org/react";
+import {cn, Switch} from "@nextui-org/react";
 import {SVGProps} from "react";
 import {JSX} from "react/jsx-runtime";
-import $ from "jquery"
+import $ from "jquery";
 
-export default function ThemeSwitcher() {
+export default function ThemeSwitcher()
+{
     return (
-        <Switch size="lg" startContent={<SunIcon/>} endContent={<MoonIcon/>} defaultSelected={getCurrentTheme() === themes.light} onValueChange={(value) => {
-            applyTheme(value ? themes.light : themes.dark)
-        }}/>
+
+
+        <Switch
+            startContent={<MoonIcon/>} endContent={<SunIcon/>} defaultSelected={getCurrentTheme() === themes.dark} onValueChange={(value) =>
+        {
+            applyTheme(value ? themes.dark : themes.light);
+        }}
+            classNames={{
+                base: cn(
+                    "inline-flex flex-row-reverse"
+                ),
+            }}
+        >
+            <div className="flex flex-col gap-1 mr-4">
+                <p className="text-medium">Darkmode</p>
+                <p className="text-tiny text-default-400">
+                    Toggle between light and dark mode
+                </p>
+            </div>
+        </Switch>
     );
 }
 
@@ -47,22 +65,26 @@ export const SunIcon = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
 );
 
 
-enum themes {
+enum themes
+{
     default,
     light,
     dark
 }
 
-export function applyTheme(theme: themes = themes.default) {
+export function applyTheme(theme: themes = themes.default)
+{
     const name: string = theme == themes.light ? "light" : theme == themes.dark ? "dark" : (localStorage.getItem("theme") ?? "light");
-    localStorage.setItem("theme", name)
-    $("html").removeClass("dark").removeClass("light").addClass(name)
+    localStorage.setItem("theme", name);
+    $("html").removeClass("dark").removeClass("light").addClass(name);
 }
 
-export function getCurrentTheme(): themes {
-    switch (localStorage.getItem("theme")) {
+export function getCurrentTheme(): themes
+{
+    switch (localStorage.getItem("theme"))
+    {
         case "dark":
-            return themes.dark
+            return themes.dark;
         case "light":
         default:
             return themes.light;
