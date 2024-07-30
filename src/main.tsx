@@ -12,6 +12,7 @@ import StoresPage from "./assets/pages/StoresPage.tsx";
 import Stores from "./assets/ts/stores.ts";
 import DepartmentsPage from "./assets/pages/DepartmentsPage.tsx";
 import ProcessingPage from "./assets/pages/ProcessingPage.tsx";
+import {Employee} from "./assets/ts/useEmployeeList.ts";
 
 applyTheme();
 
@@ -27,23 +28,18 @@ ReactDOM.createRoot($("#root")[0]!).render(
 function PageContent()
 {
     const navigate = useNavigate();
-    // const auth = new Authentication();
-    // auth.loginWithTokenFromCookie().then(res =>
-    // {
-    //     console.log(`logged in`, res);
-    //     if (window.location.pathname !== "/login" && !res)
-    //     {
-    //         navigate("/login");
-    //     }
-    // });
     if (!Stores.hasStores())
         Stores.init();
+    const [employee, setEmployee] = React.useState<Employee | null>(window.localStorage.getItem("employee") !== undefined ? JSON.parse(window.localStorage.getItem("employee")!) as Employee : null);
     return (
         <NextUIProvider navigate={navigate}>
-            <Navigation/>
+            <Navigation employee={employee}/>
             <Routes>
                 <Route>
-                    <Route path="/" element={<LoginPage/>}/>
+                    <Route path="/" element={<LoginPage onLogin={(_username, _password, _profile, employee) =>
+                    {
+                        setEmployee(employee);
+                    }}/>}/>
                     <Route path="/stores" element={<StoresPage/>}/>
                     <Route path="/stores/:store" element={<DepartmentsPage/>}/>
                     <Route path="/stores/:store/:department" element={<ProcessingPage/>}/>
