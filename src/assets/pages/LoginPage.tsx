@@ -1,9 +1,12 @@
 import {Button, cn, Input, Switch} from "@nextui-org/react";
-import Authentication from "../ts/authentication";
+import Authentication, {UserProfile} from "../ts/authentication";
 import {useState} from "react";
+import EmployeesAutocomplete from "../components/EmployeesAutocomplete.tsx";
 import {useNavigate} from "react-router-dom";
+import {Employee} from "../ts/useEmployeeList.ts";
 
-export default function LoginPage()
+
+export default function LoginPage({onLogin}: { onLogin: (username: string, password: string, profile: UserProfile, employee: Employee) => void })
 {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -11,25 +14,21 @@ export default function LoginPage()
     const [error, setError] = useState("");
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const auth = new Authentication(true);
+    const [employeeError, setEmployeeError] = useState("");
+    const auth = new Authentication(false);
+    const [loggingIn, setLoggingIn] = useState(false);
+    const [employee, setEmployee] = useState<Employee | null>(null);
     const navigate = useNavigate();
 
-    auth.loginWithTokenFromCookie().then(res =>
-    {
-        if (res)
-        {
-            navigate("/stores/");
-        }
-    });
 
     const tryToLogin = async () =>
     {
-        setLoading(true);
+        setLoggingIn(true);
         setError("");
         setUsernameError("");
         setPasswordError("");
-        if (username === "" || password === "")
+        setEmployeeError("");
+        if (username === "" || password === "" || employee === null)
         {
             if (username === "")
             {
@@ -39,7 +38,11 @@ export default function LoginPage()
             {
                 setPasswordError("Please fill in this field.");
             }
-            setLoading(false);
+            if (employee === undefined)
+            {
+                setEmployeeError("Please select an employee.");
+            }
+            setLoggingIn(false);
             return;
         }
         try
@@ -47,7 +50,11 @@ export default function LoginPage()
             const response = await auth.login(username, password);
             if (response.success)
             {
+                onLogin(username, password, auth.getUserProfile(), employee);
+                window.localStorage.setItem("profile", JSON.stringify(auth.getUserProfile()));
+                window.localStorage.setItem("employee", JSON.stringify(employee));
                 navigate("/stores/");
+
             } else
             {
                 if (response.message === "Invalid username or password.")
@@ -62,22 +69,29 @@ export default function LoginPage()
             console.error(e);
             setError(e.message);
         }
-        setLoading(false);
+        setLoggingIn(false);
     };
 
     return (
-        <div className={"mx-auto w-[40%] gap-3 flex flex-col"}>
-            <h1 className={"text-9xl mb-10"}>Login</h1>
-            <Input label={"Username"} value={username} onValueChange={value =>
+        <div className={"mx-auto w-[90%] sm:w-[90%] md:w-[70%] lg:w-[40%] gap-3 flex flex-col"}>
+            <h1 className={"text-6xl mb-10 sm:text-6xl md:text-8xl lg:text-9xl"}>Login</h1>
+            <Input label={"Username"} isRequired value={username} onValueChange={value =>
             {
                 setUsername(value);
                 setUsernameError("");
             }} errorMessage={usernameError} isInvalid={error !== "" || usernameError !== ""}/>
-            <Input label={"Password"} type={showPassword ? "text" : "password"} value={password} onValueChange={value =>
+            <Input label={"Password"} type={showPassword ? "text" : "password"} value={password} isRequired onValueChange={value =>
             {
                 setPassword(value);
                 setPasswordError("");
             }} errorMessage={passwordError} isInvalid={error !== "" || passwordError !== ""}/>
+            <EmployeesAutocomplete
+                error={employeeError}
+                onSelectionChange={item =>
+                {
+                    setEmployeeError("");
+                    setEmployee(item);
+                }}/>
             <Switch
                 onValueChange={setShowPassword}
                 classNames={{
@@ -105,7 +119,7 @@ export default function LoginPage()
                 </div>
             </Switch>
             {error && <p className={"text-red-500"}>{error}</p>}
-            <Button color={"primary"} onClick={tryToLogin} radius={"full"} isLoading={loading}>Login</Button>
+            <Button color={"primary"} onClick={tryToLogin} radius={"full"} isLoading={loggingIn}>Login</Button>
         </div>
     );
 }
