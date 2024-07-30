@@ -19,7 +19,11 @@ export default function StoresPage()
                                 title={store.name}
                                 description={store.address}
                                 className={"flex-grow flex-shrink"}
-                                onClick={()=>navigate(`/stores/${store.name.toLowerCase()}`)}
+                                onClick={() =>
+                                {
+                                    localStorage.setItem("store", store.name.toLowerCase());
+                                    navigate(`/stores/${store.name.toLowerCase()}`);
+                                }}
                             />
                         );
                     })
