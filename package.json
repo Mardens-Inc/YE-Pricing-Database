@@ -1,43 +1,47 @@
 {
-  "name": "year-end-pricing-database",
-  "private": true,
-  "version": "0.0.0",
-  "description": "This is the user interface for the years end inventory pricing database",
-  "author": "Drew Chase",
-  "license": "GPL-3.0-or-later",
-  "repository": "https://github.com/Mardens-Inc/YE-Pricing-Database",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "build and preview": "npm run build && npm run preview"
-  },
-  "dependencies": {
-    "@nextui-org/react": "^2.4.6",
-    "framer-motion": "^11.3.17",
-    "jquery": "^3.7.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.25.1"
-  },
-  "devDependencies": {
-    "@types/jquery": "^3.5.30",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.17.0",
-    "@typescript-eslint/parser": "^7.17.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "autoprefixer": "^10.4.19",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.9",
-    "postcss": "^8.4.40",
-    "postcss-import": "^16.1.0",
-    "sass": "^1.77.8",
-    "sass-loader": "^15.0.0",
-    "tailwindcss": "^3.4.7",
-    "typescript": "^5.5.4",
-    "vite": "^5.3.5"
-  }
+	"name": "year-end-pricing-database",
+	"private": true,
+	"version": "0.0.0",
+	"description": "This is the user interface for the years end inventory pricing database",
+	"author": "Drew Chase",
+	"license": "GPL-3.0-or-later",
+	"repository": "https://github.com/Mardens-Inc/YE-Pricing-Database",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+		"preview": "vite preview",
+		"build and preview": "npm run build && npm run preview",
+		"publish": "npm run build && node publish.js"
+	},
+	"dependencies": {
+		"@nextui-org/react": "^2.4.6",
+		"@nextui-org/use-infinite-scroll": "^2.1.5",
+		"@react-stately/data": "^3.11.6",
+		"framer-motion": "^11.3.17",
+		"jquery": "^3.7.1",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"react-router-dom": "^6.25.1"
+	},
+	"devDependencies": {
+		"@types/jquery": "^3.5.30",
+		"@types/react": "^18.3.3",
+		"@types/react-dom": "^18.3.0",
+		"@typescript-eslint/eslint-plugin": "^7.17.0",
+		"@typescript-eslint/parser": "^7.17.0",
+		"@vitejs/plugin-react": "^4.3.1",
+		"autoprefixer": "^10.4.19",
+		"eslint-plugin-react-hooks": "^4.6.2",
+		"eslint-plugin-react-refresh": "^0.4.9",
+		"postcss": "^8.4.40",
+		"postcss-import": "^16.1.0",
+		"sass": "^1.77.8",
+		"sass-loader": "^15.0.0",
+		"tailwindcss": "^3.4.7",
+		"typescript": "^5.5.4",
+		"vite": "^5.3.5",
+		"basic-ftp": "^5.0.5"
+	}
 }
