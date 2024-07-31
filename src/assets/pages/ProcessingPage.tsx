@@ -1,11 +1,29 @@
 import {useNavigate, useParams} from "react-router-dom";
 import Stores from "../ts/stores.ts";
-import DatabaseListComponent from "../components/DatabaseListComponent.tsx";
+import DatabaseListComponent, {DatabaseRow} from "../components/DatabaseListComponent.tsx";
 import {Button, Input, Textarea} from "@nextui-org/react";
 import {Employee} from "../ts/useEmployeeList.ts";
+import {useState} from "react";
+import $ from "jquery";
 
 export default function ProcessingPage()
 {
+    const [isAdding, setIsAdding] = useState<boolean>(false);
+
+    // form data
+    const [tagNumber, setTagNumber] = useState("");
+    const [description, setDescription] = useState("");
+    const [percent, setPercent] = useState("");
+    const [mardensPrice, setMardensPrice] = useState("");
+    const [quantity, setQuantity] = useState("");
+
+    // form data missing required field state
+    const [tagNumberError, setTagNumberError] = useState("");
+    const [percentError, setPercentError] = useState("");
+    const [mardensPriceError, setMardensPriceError] = useState("");
+    const [quantityError, setQuantityError] = useState("");
+
+
     const navigate = useNavigate();
     const params = useParams();
     const storeName: string | undefined = params.store;
@@ -23,7 +41,95 @@ export default function ProcessingPage()
         return <></>;
     }
 
+    if(!window.localStorage.getItem("employee")){
+        navigate("/");
+        return <></>;
+    }
+
     const store = Stores.getStores().filter(store => store.name.toLowerCase() === storeName.toLowerCase())[0];
+
+    const databaseRows: DatabaseRow[] = [];
+    // generate test data
+    for (let i = 0; i < 100; i++)
+    {
+        databaseRows.push({
+            id: i,
+            store: storeName,
+            tag_number: 798,
+            department: departmentName,
+            percent: parseFloat(((i * 0.01)).toFixed(2)),
+            mardens_price: parseFloat((i * 0.5 + i).toFixed(2)),
+            quantity: i,
+            description: "This is a test description",
+            employee: JSON.parse(window.localStorage.getItem("employee")!) as Employee,
+            created_at: "2021-07-01",
+            updated_at: "2021-07-01"
+        });
+    }
+
+    const onAdd = () =>
+    {
+        // handle empty fields
+        if (tagNumber === "" || percent === "" || mardensPrice === "" || quantity === "")
+        {
+            if (tagNumber === "")
+            {
+                setTagNumberError("Tag number is required.");
+            }
+            if (percent === "")
+            {
+                setPercentError("Percent is required.");
+            }
+            if (mardensPrice === "")
+            {
+                setMardensPriceError("Mardens price is required.");
+            }
+            if (quantity === "")
+            {
+                setQuantityError("Quantity is required.");
+            }
+            return;
+        }
+
+
+        setTagNumberError("");
+        setPercentError("");
+        setMardensPriceError("");
+        setQuantityError("");
+
+
+        setIsAdding(true);
+        const row: DatabaseRow = {
+            id: databaseRows.length,
+            store: storeName,
+            tag_number: parseInt(tagNumber),
+            department: departmentName,
+            percent: parseFloat(percent) / 100,
+            mardens_price: parseFloat(mardensPrice),
+            quantity: parseInt(quantity),
+            description: description,
+            employee: JSON.parse(window.localStorage.getItem("employee")!) as Employee,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+        databaseRows.unshift(row);
+        setPercent("");
+        setMardensPrice("");
+        setQuantity("");
+        $("#form-restart-input").trigger("focus");
+        setTimeout(() =>
+        {
+            setIsAdding(false);
+        }, 1000);
+    };
+
+    $("#record-data-form input").on("keyup", e =>
+    {
+        if (e.key === "Enter")
+        {
+            onAdd();
+        }
+    });
 
     return (
         <>
@@ -33,22 +139,85 @@ export default function ProcessingPage()
             </div>
 
             <div className={"w-[90%] mx-auto my-10 flex flex-row gap-3"}>
-                <div className={"flex flex-col gap-3 w-[25%]"}>
-                    <Input label={"Tag Number"}/>
-                    <Textarea label={"Description"}/>
+                <div id={"series-data-form"} className={"flex flex-col gap-3 w-[25%]"}>
+                    <Input
+                        label={"Tag Number"}
+                        value={tagNumber}
+                        onValueChange={
+                            (value) =>
+                            {
+                                setTagNumber(value);
+                                setTagNumberError("");
+                            }
+                        }
+                        autoFocus
+                        isRequired
+                        isInvalid={tagNumberError !== ""}
+                        errorMessage={tagNumberError}
+                    />
+                    <Textarea
+                        label={"Description"}
+                        value={description}
+                        onValueChange={setDescription}/>
                 </div>
-                <div className={"flex flex-col gap-3 w-[75%]"}>
-                    <Input label={"Percent"} type={"number"}/>
+                <div id={"record-data-form"} className={"flex flex-col gap-3 w-[75%]"}>
+                    <Input
+                        id={"form-restart-input"}
+                        label={"Percent"}
+                        type={"number"}
+                        value={percent}
+                        onValueChange={
+                            (value) =>
+                            {
+                                setPercent(value);
+                                setPercentError("");
+                            }
+                        }
+                        isRequired
+                        isInvalid={percentError !== ""}
+                        errorMessage={percentError}/>
                     <div className={"flex flex-row gap-3"}>
-                        <Input label={"Mardens Price or Tag Price"} type={"number"}/>
-                        <Input label={"Quantity"} className={"w-[25%]"} type={"number"}/>
+                        <Input
+                            label={"Mardens Price or Tag Price"}
+                            type={"number"}
+                            value={mardensPrice}
+                            onValueChange={
+                                (value) =>
+                                {
+                                    setMardensPrice(value);
+                                    setMardensPriceError("");
+                                }
+                            }
+                            isRequired
+                            isInvalid={mardensPriceError !== ""}
+                            errorMessage={mardensPriceError}/>
+                        <Input
+                            label={"Quantity"}
+                            className={"w-[25%]"}
+                            type={"number"}
+                            value={quantity}
+                            onValueChange={
+                                (value) =>
+                                {
+                                    setQuantity(value);
+                                    setQuantityError("");
+                                }
+                            }
+                            isRequired
+                            isInvalid={quantityError !== ""}
+                            errorMessage={quantityError}/>
                     </div>
-                    <Button radius={"full"}>Add</Button>
+                    <Button radius={"full"} isLoading={isAdding} onClick={onAdd}>Add</Button>
                 </div>
             </div>
 
 
-            <DatabaseListComponent store={storeName} department={departmentName!} employee={JSON.parse(window.localStorage.getItem("employee")!) as Employee}/>
+            <DatabaseListComponent
+                store={storeName}
+                department={departmentName!}
+                employee={JSON.parse(window.localStorage.getItem("employee")!) as Employee}
+                data={databaseRows}
+            />
         </>
     );
 }
