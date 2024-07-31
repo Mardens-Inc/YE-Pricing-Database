@@ -35,7 +35,7 @@ internal static class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Status}/{action=Index}/{id?}");
+            pattern: "{controller=Inventory}/{action=Index}/{id?}");
 
         app.Run();
     }
