@@ -31,6 +31,7 @@ function PageContent()
     if (!Stores.hasStores())
         Stores.init();
     const [employee, setEmployee] = React.useState<Employee | null>(window.localStorage.getItem("employee") !== undefined ? JSON.parse(window.localStorage.getItem("employee")!) as Employee : null);
+
     return (
         <NextUIProvider navigate={navigate}>
             <Navigation employee={employee}/>
