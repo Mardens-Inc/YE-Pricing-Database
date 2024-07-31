@@ -25,44 +25,29 @@ export interface DatabaseListProps
     store: string;
     department: string;
     employee: Employee;
+    data: DatabaseRow[];
 }
 
 
 export default function DatabaseListComponent(props: DatabaseListProps)
 {
-    const [deletingId, setDeletingId] = useState<number | null>(null);
-    const [editingRecord, setEditingRecord] = useState<DatabaseRow | null>(null);
-    const databaseRows: DatabaseRow[] = [];
-
-    // generate test data
-    for (let i = 0; i < 100; i++)
-    {
-        databaseRows.push({
-            id: i,
-            store: props.store,
-            tag_number: 798,
-            department: props.department,
-            percent: parseFloat(((i * 0.01)).toFixed(2)),
-            mardens_price: parseFloat((i * 0.5 + i).toFixed(2)),
-            quantity: i,
-            description: "This is a test description",
-            employee: props.employee,
-            created_at: "2021-07-01",
-            updated_at: "2021-07-01"
-        });
+    if(props.employee === null){
+        return <></>;
     }
 
+    const [deletingId, setDeletingId] = useState<number | null>(null);
+    const [editingRecord, setEditingRecord] = useState<DatabaseRow | null>(null);
 
     const itemsPerPage = 10;
-    const pages = Math.ceil(databaseRows.length / itemsPerPage);
+    const pages = Math.ceil(props.data.length / itemsPerPage);
     const [page, setPage] = useState(1);
 
     const items = useMemo(() =>
     {
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        return databaseRows.slice(start, end);
-    }, [page, databaseRows]);
+        return props.data.slice(start, end);
+    }, [page, props.data]);
 
     return (
         <>
