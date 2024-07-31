@@ -15,6 +15,17 @@ export default function Navigation({employee}: { employee: Employee | null })
     const navigate = useNavigate();
     const [emp, setEmployee] = useState<Employee | null>(employee);
 
+    if(!employee && window.location.pathname !== "/"){
+        navigate("/");
+    }
+
+
+    auth.loginWithTokenFromCookie().then(res=>{
+        if(!res && window.location.pathname !== "/"){
+            navigate("/");
+        }
+    })
+
 
     useEffect(() =>
     {
