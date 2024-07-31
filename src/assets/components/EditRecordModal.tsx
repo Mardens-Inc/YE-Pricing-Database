@@ -20,6 +20,7 @@ export default function EditRecordModal(props: EditRecordModalProps)
     }
 
     const [record, setRecord] = useState<DatabaseRow>(props.record);
+    console.log(record)
     return (
         <>
             <Modal isOpen={props.isOpen} onOpenChange={props.onOpenChange}>
@@ -39,6 +40,7 @@ export default function EditRecordModal(props: EditRecordModalProps)
                                         label={"Department"}
                                         onChange={(e) => setRecord({...record, department: e.target.value})}
                                         defaultItems={all_departments}
+                                        defaultSelectedKey={all_departments.filter(dept => dept.name.toLowerCase() === record.department.toLowerCase())[0].name}
                                     >
                                         {({name, image}) => (
                                             <AutocompleteItem key={name} textValue={name}>
