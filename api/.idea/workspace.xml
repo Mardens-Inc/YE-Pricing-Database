@@ -7,18 +7,11 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database_config.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database_row_entry.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/db_access.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/httaccess.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/table.sql" afterDir="false" />
+    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="Add dynamic server configuration fetch&#10;&#10;Fetch server configuration dynamically from a remote URL and pass it to the Actix web application. This includes printing the server start message and integrating `database_config` for configuration management.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database_row_entry.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/database_row_entry.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db_access.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/db_access.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/httaccess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/httaccess.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,6 +86,9 @@
     ],
     "com.intellij.ide.scratch.LRUPopupBuilder$1/": [
       "MySQL"
+    ],
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JSON"
     ]
   }
 }]]></component>
@@ -154,7 +150,7 @@
       <workItem from="1722524900819" duration="9821000" />
       <workItem from="1722539948002" duration="19878000" />
       <workItem from="1722622028831" duration="1230000" />
-      <workItem from="1722867255993" duration="15959000" />
+      <workItem from="1722867255993" duration="18357000" />
     </task>
     <task id="LOCAL-00001" summary="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file.">
       <option name="closed" value="true" />
@@ -172,7 +168,71 @@
       <option name="project" value="LOCAL" />
       <updated>1722601467670</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add 'years-end-inventory' table&#10;&#10;Created 'years-end-inventory' table to store inventory details including tag number, store, department, percentage, prices, quantity, description, and employee details. The table includes auto-increment for the primary key and timestamp fields for creation and updates.">
+      <option name="closed" value="true" />
+      <created>1722948467309</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948467309</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Update dependencies: add chrono and urlencoding&#10;&#10;Added `chrono` for enhanced date and time handling in serde and mysql features. Included the `urlencoding` crate to support URL encoding tasks. These additions improve functionality and maintain compatibility.">
+      <option name="closed" value="true" />
+      <created>1722948478401</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948478401</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add IntelliJ data source and code style configurations&#10;&#10;This commit introduces new configuration files for IntelliJ IDEA, including data sources for local MySQL databases and project-specific code style settings. These configurations will help streamline database connectivity and maintain consistent coding standards across the project.">
+      <option name="closed" value="true" />
+      <created>1722948487748</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948487748</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add database configuration struct&#10;&#10;Introduce `DatabaseConfig` and `Filemaker` structs with fields for host, user, passwords, and hash. Implemented serialization and deserialization using Serde to facilitate easy reading and writing of configuration data.">
+      <option name="closed" value="true" />
+      <created>1722948496093</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948496093</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add structs for database row and insertion handling&#10;&#10;Introduced `DatabaseRowEntry`, `DatabaseInsertEntry`, and `DBResult` structs for managing database rows, insertion data, and paginated results, respectively. This addition will streamline data handling and serialization, facilitating smoother database operations.">
+      <option name="closed" value="true" />
+      <created>1722948504202</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948504202</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add database access module&#10;&#10;Introduce `db_access.rs` to handle range queries and database connections for the years-end-inventory table. This includes query filtering, sorting, pagination, and connecting to the MySQL database based on the provided configuration.">
+      <option name="closed" value="true" />
+      <created>1722948512043</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948512043</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add HTTP GET and POST handlers for range and test endpoints&#10;&#10;Implemented the `range` and `test` functions to handle GET and POST requests respectively. These handlers manage query parameters, URI decoding, and error handling, interfacing with the database to either fetch or insert data based on the request.">
+      <option name="closed" value="true" />
+      <created>1722948520612</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948520612</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add dynamic server configuration fetch&#10;&#10;Fetch server configuration dynamically from a remote URL and pass it to the Actix web application. This includes printing the server start message and integrating `database_config` for configuration management.">
+      <option name="closed" value="true" />
+      <created>1722948531951</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1722948531951</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,6 +245,14 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file." />
     <MESSAGE value="Add IntelliJ IDEA project configuration files&#10;&#10;This commit includes new `.idea` directory files to accommodate the IntelliJ IDEA project setup. These files define project structure, VCS mappings, auto-import settings, and specific toolchain configurations for the Rust-based project." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add IntelliJ IDEA project configuration files&#10;&#10;This commit includes new `.idea` directory files to accommodate the IntelliJ IDEA project setup. These files define project structure, VCS mappings, auto-import settings, and specific toolchain configurations for the Rust-based project." />
+    <MESSAGE value="Add 'years-end-inventory' table&#10;&#10;Created 'years-end-inventory' table to store inventory details including tag number, store, department, percentage, prices, quantity, description, and employee details. The table includes auto-increment for the primary key and timestamp fields for creation and updates." />
+    <MESSAGE value="Update dependencies: add chrono and urlencoding&#10;&#10;Added `chrono` for enhanced date and time handling in serde and mysql features. Included the `urlencoding` crate to support URL encoding tasks. These additions improve functionality and maintain compatibility." />
+    <MESSAGE value="Add IntelliJ data source and code style configurations&#10;&#10;This commit introduces new configuration files for IntelliJ IDEA, including data sources for local MySQL databases and project-specific code style settings. These configurations will help streamline database connectivity and maintain consistent coding standards across the project." />
+    <MESSAGE value="Add database configuration struct&#10;&#10;Introduce `DatabaseConfig` and `Filemaker` structs with fields for host, user, passwords, and hash. Implemented serialization and deserialization using Serde to facilitate easy reading and writing of configuration data." />
+    <MESSAGE value="Add structs for database row and insertion handling&#10;&#10;Introduced `DatabaseRowEntry`, `DatabaseInsertEntry`, and `DBResult` structs for managing database rows, insertion data, and paginated results, respectively. This addition will streamline data handling and serialization, facilitating smoother database operations." />
+    <MESSAGE value="Add database access module&#10;&#10;Introduce `db_access.rs` to handle range queries and database connections for the years-end-inventory table. This includes query filtering, sorting, pagination, and connecting to the MySQL database based on the provided configuration." />
+    <MESSAGE value="Add HTTP GET and POST handlers for range and test endpoints&#10;&#10;Implemented the `range` and `test` functions to handle GET and POST requests respectively. These handlers manage query parameters, URI decoding, and error handling, interfacing with the database to either fetch or insert data based on the request." />
+    <MESSAGE value="Add dynamic server configuration fetch&#10;&#10;Fetch server configuration dynamically from a remote URL and pass it to the Actix web application. This includes printing the server start message and integrating `database_config` for configuration management." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add dynamic server configuration fetch&#10;&#10;Fetch server configuration dynamically from a remote URL and pass it to the Actix web application. This includes printing the server start message and integrating `database_config` for configuration management." />
   </component>
 </project>
