@@ -7,11 +7,7 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ec917835-bcb8-4823-b556-93e5d7798de5.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ec917835-bcb8-4823-b556-93e5d7798de5.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx.conf" afterDir="false" />
-    </list>
+    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -194,7 +190,7 @@
       <workItem from="1722539948002" duration="19878000" />
       <workItem from="1722622028831" duration="1230000" />
       <workItem from="1722867255993" duration="23211000" />
-      <workItem from="1722959793619" duration="1244000" />
+      <workItem from="1722959793619" duration="1699000" />
     </task>
     <task id="LOCAL-00001" summary="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file.">
       <option name="closed" value="true" />
