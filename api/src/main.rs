@@ -1,6 +1,6 @@
 use actix_web::{web, App, HttpServer};
 
-use httaccess::{insert, range};
+use httaccess::{insert, range,update, delete};
 
 mod database_config;
 mod database_row_entry;
@@ -17,6 +17,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(config.clone()))
             .service(range)
             .service(insert)
+            .service(update)
+            .service(delete)
     })
     .bind(("127.0.0.1", 1870))?
     .run()
