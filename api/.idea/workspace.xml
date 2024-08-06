@@ -7,11 +7,10 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="Add dynamic server configuration fetch&#10;&#10;Fetch server configuration dynamically from a remote URL and pass it to the Actix web application. This includes printing the server start message and integrating `database_config` for configuration management.">
+    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="Add update and delete services to main.rs&#10;&#10;This commit includes the addition of update and delete services to the HTTP server configuration. These additions enhance the capability of the server by allowing it to handle more types of HTTP requests. The main.rs file has been updated to import and register these new services.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database_row_entry.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/database_row_entry.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db_access.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/db_access.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httaccess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/httaccess.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,6 +65,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Cargo.Build WSL.executor": "Run",
+    "Cargo.Build.executor": "Run",
     "Cargo.Run.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
@@ -95,7 +96,42 @@
   <component name="RsExternalLinterProjectSettings">
     <option name="runOnTheFly" value="true" />
   </component>
-  <component name="RunManager" selected="Cargo.Run">
+  <component name="RunManager" selected="Cargo.Build WSL">
+    <configuration name="Build WSL" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <target name="WSL - Ubuntu-22.04" />
+      <option name="command" value="build --release" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Build" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
+      <option name="command" value="build --release" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <option name="emulateTerminal" value="true" />
+      <option name="channel" value="DEFAULT" />
+      <option name="requiredFeatures" value="true" />
+      <option name="allFeatures" value="false" />
+      <option name="withSudo" value="false" />
+      <option name="buildTarget" value="REMOTE" />
+      <option name="backtrace" value="SHORT" />
+      <option name="isRedirectInput" value="false" />
+      <option name="redirectInputPath" value="" />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Run" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
       <option name="command" value="run" />
       <option name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -132,6 +168,8 @@
     </configuration>
     <list>
       <item itemvalue="Cargo.Run" />
+      <item itemvalue="Cargo.Build" />
+      <item itemvalue="Cargo.Build WSL" />
       <item itemvalue="Cargo.Watch" />
     </list>
   </component>
@@ -150,7 +188,7 @@
       <workItem from="1722524900819" duration="9821000" />
       <workItem from="1722539948002" duration="19878000" />
       <workItem from="1722622028831" duration="1230000" />
-      <workItem from="1722867255993" duration="18357000" />
+      <workItem from="1722867255993" duration="21650000" />
     </task>
     <task id="LOCAL-00001" summary="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file.">
       <option name="closed" value="true" />
@@ -232,7 +270,55 @@
       <option name="project" value="LOCAL" />
       <updated>1722948531951</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Update .idea/workspace.xml tasks and settings&#10;&#10;Updated local tasks and reformatted the workspace XML. Added messages and summaries for new tasks, adjusted components, and modified file tracking settings for improved project management.">
+      <option name="closed" value="true" />
+      <created>1722950987483</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1722950987483</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add DatabaseUpdateEntry struct&#10;&#10;Introduced `DatabaseUpdateEntry` struct with serialization and deserialization capabilities. This new struct mirrors `DatabaseRowEntry` with appropriate fields defined for update operations.">
+      <option name="closed" value="true" />
+      <created>1722950994822</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1722950994822</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add query documentation and CRUD functionality to db_access.rs&#10;&#10;Documented the `range` function, added CRUD operations (`insert`, `delete`, `update`) and enhanced the SQL query execution handling. This improves readability and functionality of the database access layer.">
+      <option name="closed" value="true" />
+      <created>1722951004804</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1722951004804</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add HTTP PATCH and DELETE endpoints&#10;&#10;Introduced PATCH and DELETE endpoints to support updating and deleting database entries. Additionally, renamed existing POST endpoint for clarity and reformatted function call arguments for better readability.">
+      <option name="closed" value="true" />
+      <created>1722951012033</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1722951012033</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Add 'insert' service to HttpServer&#10;&#10;Updated the dependencies and added the 'insert' service in the actix web server setup. This allows the server to handle both 'range' and 'insert' HTTP services, bolstering its functionality.">
+      <option name="closed" value="true" />
+      <created>1722951023582</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1722951023582</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Add update and delete services to main.rs&#10;&#10;This commit includes the addition of update and delete services to the HTTP server configuration. These additions enhance the capability of the server by allowing it to handle more types of HTTP requests. The main.rs file has been updated to import and register these new services.">
+      <option name="closed" value="true" />
+      <created>1722951063958</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1722951063958</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -253,6 +339,12 @@
     <MESSAGE value="Add database access module&#10;&#10;Introduce `db_access.rs` to handle range queries and database connections for the years-end-inventory table. This includes query filtering, sorting, pagination, and connecting to the MySQL database based on the provided configuration." />
     <MESSAGE value="Add HTTP GET and POST handlers for range and test endpoints&#10;&#10;Implemented the `range` and `test` functions to handle GET and POST requests respectively. These handlers manage query parameters, URI decoding, and error handling, interfacing with the database to either fetch or insert data based on the request." />
     <MESSAGE value="Add dynamic server configuration fetch&#10;&#10;Fetch server configuration dynamically from a remote URL and pass it to the Actix web application. This includes printing the server start message and integrating `database_config` for configuration management." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add dynamic server configuration fetch&#10;&#10;Fetch server configuration dynamically from a remote URL and pass it to the Actix web application. This includes printing the server start message and integrating `database_config` for configuration management." />
+    <MESSAGE value="Update .idea/workspace.xml tasks and settings&#10;&#10;Updated local tasks and reformatted the workspace XML. Added messages and summaries for new tasks, adjusted components, and modified file tracking settings for improved project management." />
+    <MESSAGE value="Add DatabaseUpdateEntry struct&#10;&#10;Introduced `DatabaseUpdateEntry` struct with serialization and deserialization capabilities. This new struct mirrors `DatabaseRowEntry` with appropriate fields defined for update operations." />
+    <MESSAGE value="Add query documentation and CRUD functionality to db_access.rs&#10;&#10;Documented the `range` function, added CRUD operations (`insert`, `delete`, `update`) and enhanced the SQL query execution handling. This improves readability and functionality of" />
+    <MESSAGE value="Add HTTP PATCH and DELETE endpoints&#10;&#10;Introduced PATCH and DELETE endpoints to support updating and deleting database entries. Additionally, renamed existing POST endpoint for clarity and reformatted function call arguments for better readability." />
+    <MESSAGE value="Add 'insert' service to HttpServer&#10;&#10;Updated the dependencies and added the 'insert' service in the actix web server setup. This allows the server to handle both 'range' and 'insert' HTTP services, bolstering its functionality." />
+    <MESSAGE value="Add update and delete services to main.rs&#10;&#10;This commit includes the addition of update and delete services to the HTTP server configuration. These additions enhance the capability of the server by allowing it to handle more types of HTTP requests. The main.rs file has been updated to import and register these new services." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add update and delete services to main.rs&#10;&#10;This commit includes the addition of update and delete services to the HTTP server configuration. These additions enhance the capability of the server by allowing it to handle more types of HTTP requests. The main.rs file has been updated to import and register these new services." />
   </component>
 </project>
