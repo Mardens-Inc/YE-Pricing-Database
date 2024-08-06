@@ -53,13 +53,16 @@ async fn main() -> std::io::Result<()> {
 /// }
 /// ```
 async fn get_config() -> Result<database_config::DatabaseConfig, String> {
-	let client = reqwest::Client::new();
+	let client = reqwest::Client::builder()
+		.danger_accept_invalid_certs(true)
+		.build()
+		.unwrap();
 	let res = match client
 		.get("https://lib.mardens.com/config.json")
 		.send()
 		.await {
 		Ok(res) => res,
-		Err(e) => return Err(e.to_string())
+		Err(e) => return Err(e.to_string()),
 	};
 	let body = res.text().await.unwrap();
 	let config: database_config::DatabaseConfig = serde_json::from_str(&body).unwrap();
