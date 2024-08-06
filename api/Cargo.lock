@@ -2915,6 +2915,7 @@ name = "years_end_pricing_database_api"
 version = "0.1.1"
 dependencies = [
  "actix-web",
+ "cc",
  "chrono",
  "mysql",
  "reqwest",
