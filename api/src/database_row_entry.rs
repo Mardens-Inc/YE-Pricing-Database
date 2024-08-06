@@ -26,6 +26,18 @@ pub struct DatabaseInsertEntry {
     pub description: String,
     pub employee: i32,
 }
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DatabaseUpdateEntry {
+    pub id: i32,
+    pub tag_number: i32,
+    pub store: i32,
+    pub department: i32,
+    pub percent: f32,
+    pub mardens_price: f32,
+    pub quantity: i32,
+    pub description: String,
+    pub employee: i32,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DBResult {
