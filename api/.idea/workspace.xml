@@ -7,7 +7,16 @@
     <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="" />
+    <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../src/assets/ts/records.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/../nginx.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/assets/components/DatabaseListComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/components/DatabaseListComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/assets/pages/ProcessingPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/pages/ProcessingPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/assets/ts/stores.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/ts/stores.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +71,7 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "Cargo.Build WSL.executor": "Run",
     "Cargo.Build.executor": "Run",
-    "Cargo.Run.executor": "Run",
+    "Cargo.Run.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.rust.reset.selective.auto.import": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -97,7 +106,7 @@
   <component name="RsExternalLinterProjectSettings">
     <option name="runOnTheFly" value="true" />
   </component>
-  <component name="RunManager" selected="Cargo.Run">
+  <component name="RunManager" selected="Cargo.Build WSL">
     <configuration name="Build WSL" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
       <target name="WSL - Ubuntu-22.04" />
       <option name="command" value="build --release" />
@@ -191,6 +200,7 @@
       <workItem from="1722622028831" duration="1230000" />
       <workItem from="1722867255993" duration="23211000" />
       <workItem from="1722959793619" duration="1699000" />
+      <workItem from="1723044523001" duration="6368000" />
     </task>
     <task id="LOCAL-00001" summary="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file.">
       <option name="closed" value="true" />
