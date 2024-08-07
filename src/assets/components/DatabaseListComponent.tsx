@@ -1,9 +1,12 @@
 import {Button, cn, getKeyValue, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip} from "@nextui-org/react";
 import {EditIcon, TrashIcon} from "./Icons.tsx";
-import {useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import ConfirmModal from "./ConfirmModal.tsx";
 import EditRecordModal from "./EditRecordModal.tsx";
 import {Employee} from "../ts/useEmployeeList.ts";
+import Records, {recordToDatabaseRow} from "../ts/records.ts";
+import Stores from "../ts/stores.ts";
+import {all_departments} from "../pages/DepartmentsPage.tsx";
 
 export interface DatabaseRow
 {
@@ -25,29 +28,38 @@ export interface DatabaseListProps
     store: string;
     department: string;
     employee: Employee;
-    data: DatabaseRow[];
 }
 
 
 export default function DatabaseListComponent(props: DatabaseListProps)
 {
-    if(props.employee === null){
+    if (props.employee === null)
+    {
         return <></>;
     }
 
     const [deletingId, setDeletingId] = useState<number | null>(null);
     const [editingRecord, setEditingRecord] = useState<DatabaseRow | null>(null);
+    const [items, setItems] = useState<DatabaseRow[]>([]);
 
-    const itemsPerPage = 10;
-    const pages = Math.ceil(props.data.length / itemsPerPage);
+
+    let pages = 0;
     const [page, setPage] = useState(1);
 
-    const items = useMemo(() =>
+    useEffect(() =>
     {
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        return props.data.slice(start, end);
-    }, [page, props.data]);
+        Records.search({
+            employee: props.employee.employee_id,
+            page,
+            store: Stores.getStores().filter(store => store.name.toLowerCase() === props.store.toLowerCase())[0].id,
+            department: all_departments.findIndex(department => department.name.toLowerCase() === props.department.toLowerCase())
+        }).then(async result =>
+        {
+            setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
+            pages = result.last_page;
+        });
+    }, [props.employee, props.store, props.department]);
+
 
     return (
         <>
@@ -104,19 +116,21 @@ export default function DatabaseListComponent(props: DatabaseListProps)
 
                 }}
                 bottomContent={
-                    <div className={"flex w-full justify-center"}>
-                        <Pagination
-                            isCompact
-                            showControls
-                            showShadow
-                            color={"primary"}
-                            total={pages}
-                            page={page}
-                            onChange={(page) => setPage(page)}
-
-
-                        />
-                    </div>
+                    (() =>
+                    {
+                        if (pages === 0) return (<></>);
+                        return (<div className={"flex w-full justify-center"}>
+                            <Pagination
+                                isCompact
+                                showControls
+                                showShadow
+                                color={"primary"}
+                                total={pages}
+                                page={page}
+                                onChange={(page) => setPage(page)}
+                            />
+                        </div>);
+                    })()
                 }
             >
                 <TableHeader>
