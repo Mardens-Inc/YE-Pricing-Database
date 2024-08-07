@@ -1,4 +1,5 @@
-use actix_web::{App, HttpServer, web};
+use actix_web::{App, dev::Service as _, HttpServer, web};
+use actix_web::http::header;
 
 use httaccess::{delete, insert, range, update};
 
@@ -17,6 +18,14 @@ async fn main() -> std::io::Result<()> {
 	println!("Server running at http://127.0.0.1:1870/");
 	HttpServer::new(move || {
 		App::new()
+			.wrap_fn(|req, srv| {
+				let fut = srv.call(req);
+				async {
+					let mut res = fut.await?;
+					res.headers_mut().insert(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*".parse().unwrap());
+					Ok(res)
+				}
+			})
 			.app_data(web::Data::new(config.clone()))
 			.service(range)
 			.service(insert)
