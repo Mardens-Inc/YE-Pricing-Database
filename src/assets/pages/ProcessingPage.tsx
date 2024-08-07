@@ -1,6 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom";
 import Stores from "../ts/stores.ts";
-import DatabaseListComponent, {DatabaseRow} from "../components/DatabaseListComponent.tsx";
+import DatabaseListComponent from "../components/DatabaseListComponent.tsx";
 import {Button, Input, Textarea} from "@nextui-org/react";
 import {Employee} from "../ts/useEmployeeList.ts";
 import {useState} from "react";
@@ -41,31 +41,13 @@ export default function ProcessingPage()
         return <></>;
     }
 
-    if(!window.localStorage.getItem("employee")){
+    if (!window.localStorage.getItem("employee"))
+    {
         navigate("/");
         return <></>;
     }
 
     const store = Stores.getStores().filter(store => store.name.toLowerCase() === storeName.toLowerCase())[0];
-
-    const databaseRows: DatabaseRow[] = [];
-    // generate test data
-    for (let i = 0; i < 100; i++)
-    {
-        databaseRows.push({
-            id: i,
-            store: storeName,
-            tag_number: 798,
-            department: departmentName,
-            percent: parseFloat(((i * 0.01)).toFixed(2)),
-            mardens_price: parseFloat((i * 0.5 + i).toFixed(2)),
-            quantity: i,
-            description: "This is a test description",
-            employee: JSON.parse(window.localStorage.getItem("employee")!) as Employee,
-            created_at: "2021-07-01",
-            updated_at: "2021-07-01"
-        });
-    }
 
     const onAdd = () =>
     {
@@ -99,20 +81,11 @@ export default function ProcessingPage()
 
 
         setIsAdding(true);
-        const row: DatabaseRow = {
-            id: databaseRows.length,
-            store: storeName,
-            tag_number: parseInt(tagNumber),
-            department: departmentName,
-            percent: parseFloat(percent) / 100,
-            mardens_price: parseFloat(mardensPrice),
-            quantity: parseInt(quantity),
-            description: description,
-            employee: JSON.parse(window.localStorage.getItem("employee")!) as Employee,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-        };
-        databaseRows.unshift(row);
+
+        // TODO: Submit to API
+        // ...
+
+
         setPercent("");
         setMardensPrice("");
         setQuantity("");
@@ -216,7 +189,6 @@ export default function ProcessingPage()
                 store={storeName}
                 department={departmentName!}
                 employee={JSON.parse(window.localStorage.getItem("employee")!) as Employee}
-                data={databaseRows}
             />
         </>
     );
