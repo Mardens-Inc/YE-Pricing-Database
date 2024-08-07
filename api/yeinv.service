@@ -1,0 +1,14 @@
+[Unit]
+Description=The years end inventory pricing database api service
+StartLimitIntervalSec=0
+After=network.target
+
+[Service]
+Type=exec
+Restart=always
+RestartSec=1
+User=administrator
+ExecStart=/www/wwwroot/new.inv.mardens.com/api/years_end_pricing_database_api
+
+[Install]
+WantedBy=multi-user.target
