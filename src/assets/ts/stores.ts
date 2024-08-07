@@ -2,6 +2,7 @@ import $ from "jquery";
 
 interface Store
 {
+    id: number,
     name: string,
     address: string,
     images: any
@@ -22,6 +23,6 @@ export default class Stores
 
     static getStores(): Store[]
     {
-        return JSON.parse(localStorage.getItem("stores") as string) as Store[];
+        return (JSON.parse(localStorage.getItem("stores") as string) as Store[]).map((store, index) => ({...store, id: index}));
     }
 }
