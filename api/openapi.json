@@ -1,0 +1,290 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Years End Pricing Database",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "https://yeinv.mardens.com/api/"
+		}
+	],
+	"paths": {
+		"/": {
+			"get": {
+				"summary": "List",
+				"parameters": [
+					{
+						"name": "limit",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 1
+						}
+					},
+					{
+						"name": "store",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 0
+						}
+					},
+					{
+						"name": "department",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 0
+						}
+					},
+					{
+						"name": "tag_number",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"default": 1234
+						}
+					},
+					{
+						"name": "asc",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "boolean",
+							"default": false
+						}
+					},
+					{
+						"name": "query",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": "test"
+						}
+					},
+					{
+						"name": "from",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": "2024-01-01"
+						}
+					},
+					{
+						"name": "to",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": "2025-01-01"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"example": true,
+								"examples": {
+									"success": {
+										"value": {
+											"data": [
+												{
+													"id": 14775,
+													"tag_number": 1234,
+													"store": 0,
+													"department": 0,
+													"percent": 40,
+													"mardens_price": 19.99,
+													"quantity": 88,
+													"description": "super duper test :)",
+													"employee": 89,
+													"created_at": "2024-08-08 14:38:21",
+													"updated_at": "2024-08-08 14:47:58"
+												}
+											],
+											"per_page": 1,
+											"current_page": 1,
+											"last_page": 2,
+											"count": 2,
+											"total": 14774
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Create",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"tag_number": {
+										"type": "integer",
+										"default": 1234
+									},
+									"store": {
+										"type": "integer",
+										"default": 0
+									},
+									"department": {
+										"type": "integer",
+										"default": 0
+									},
+									"percent": {
+										"type": "integer",
+										"default": 40
+									},
+									"mardens_price": {
+										"type": "number",
+										"default": 19.99
+									},
+									"quantity": {
+										"type": "integer",
+										"default": 88
+									},
+									"employee": {
+										"type": "integer",
+										"default": 89
+									},
+									"description": {
+										"type": "string",
+										"default": "super duper test"
+									}
+								},
+								"required": [
+									"tag_number",
+									"store",
+									"department",
+									"percent",
+									"mardens_price",
+									"quantity",
+									"employee",
+									"description"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			},
+			"patch": {
+				"summary": "Update",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"default": 14775
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"tag_number": {
+										"type": "integer",
+										"default": 1234
+									},
+									"store": {
+										"type": "integer",
+										"default": 0
+									},
+									"department": {
+										"type": "integer",
+										"default": 0
+									},
+									"percent": {
+										"type": "integer",
+										"default": 40
+									},
+									"mardens_price": {
+										"type": "number",
+										"default": 19.99
+									},
+									"quantity": {
+										"type": "integer",
+										"default": 88
+									},
+									"employee": {
+										"type": "integer",
+										"default": 89
+									},
+									"description": {
+										"type": "string",
+										"default": "super duper test :)"
+									}
+								},
+								"required": [
+									"tag_number",
+									"store",
+									"department",
+									"percent",
+									"mardens_price",
+									"quantity",
+									"employee",
+									"description"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			},
+			"delete": {
+				"summary": "Delete",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"default": 1234
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		}
+	}
+}
