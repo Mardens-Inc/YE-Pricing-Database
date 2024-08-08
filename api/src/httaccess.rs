@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use actix_web::{delete, get, HttpRequest, HttpResponse, patch, post, Responder, web};
 use actix_web::web::Data;
+use actix_web::{delete, get, patch, post, web, HttpRequest, HttpResponse, Responder};
 use serde_json::json;
 use urlencoding::decode;
 use web::Json;
@@ -34,7 +34,7 @@ pub async fn range(config: Data<DatabaseConfig>, request: HttpRequest) -> impl R
 	let asc = params
 		.get("asc")
 		.and_then(|x| x.parse().ok()) // Parse boolean
-		.unwrap_or(true); // Default is ascending order
+		.unwrap_or(false); // Default is ascending order
 	let employee = params
 		.get("employee")
 		.and_then(|x| x.parse().ok())
@@ -94,21 +94,26 @@ pub async fn insert(
 #[patch("/")]
 pub async fn update(
 	config: Data<DatabaseConfig>,
-	id: web::Query<i32>,
+	query: web::Query<UpdateQuery>,
 	entry: Json<DatabaseInsertEntry>,
 ) -> HttpResponse {
 	// Handle data access call and possible errors
-	match db_access::update(config, id.into_inner(), entry.into_inner()) {
+	match db_access::update(config, query.id, entry.into_inner()) {
 		Ok(_) => HttpResponse::Ok().finish(), // Return a 200 OK response on success
 		Err(e) => HttpResponse::InternalServerError().json(json!({"error": e})), // Return errors as a JSON response
 	}
 }
 
 #[delete("/")]
-pub async fn delete(config: Data<DatabaseConfig>, id: web::Query<i32>) -> HttpResponse {
+pub async fn delete(config: Data<DatabaseConfig>, query: web::Query<UpdateQuery>) -> HttpResponse {
 	// Handle data access call and possible errors
-	match db_access::delete(config, id.into_inner()) {
+	match db_access::delete(config, query.id) {
 		Ok(_) => HttpResponse::Ok().finish(), // Return a 200 OK response on success
 		Err(e) => HttpResponse::InternalServerError().json(json!({"error": e})), // Return errors as a JSON response
 	}
+}
+
+#[derive(serde::Deserialize)]
+struct UpdateQuery {
+	id: i32,
 }
