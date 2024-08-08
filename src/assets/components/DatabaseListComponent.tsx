@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import ConfirmModal from "./ConfirmModal.tsx";
 import EditRecordModal from "./EditRecordModal.tsx";
 import {Employee} from "../ts/useEmployeeList.ts";
-import Records, {recordToDatabaseRow} from "../ts/records.ts";
+import Records, {databaseRowToRecord, recordToDatabaseRow} from "../ts/records.ts";
 import Stores from "../ts/stores.ts";
 import {all_departments} from "../pages/DepartmentsPage.tsx";
 
@@ -53,10 +53,10 @@ export default function DatabaseListComponent(props: DatabaseListProps)
             employee: props.employee.employee_id,
             page,
             store: Stores.getStores().filter(store => store.name.toLowerCase() === props.store.toLowerCase())[0].id,
-            department: all_departments.findIndex(department => department.name.toLowerCase() === props.department.toLowerCase())
+            department: all_departments.findIndex(department => department.name.toLowerCase() === props.department.toLowerCase()),
+            limit: 10
         }).then(async result =>
         {
-            console.log(result);
             setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
             setPages(result.last_page);
         });
@@ -99,10 +99,13 @@ export default function DatabaseListComponent(props: DatabaseListProps)
 
             <EditRecordModal
                 record={editingRecord}
-                onClose={value =>
+                onClose={async value =>
                 {
-                    console.log(`Saving ${JSON.stringify(value)}`);
+                    if (value === null) return;
+                    console.log(`Saving`, value);
+                    await Records.update(await databaseRowToRecord(value));
                     setEditingRecord(null);
+                    refresh();
                 }}
                 isOpen={editingRecord !== null}
                 onOpenChange={
@@ -145,8 +148,8 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                 }
             >
                 <TableHeader>
-                    <TableColumn key={"store"}>Store</TableColumn>
-                    <TableColumn key={"department"}>Department</TableColumn>
+                    <TableColumn key={"store"} className={"max-w-8"}>Store</TableColumn>
+                    <TableColumn key={"department"} className={"max-w-8"}>Department</TableColumn>
                     <TableColumn key={"description"}>Description</TableColumn>
                     <TableColumn key={"percent"}>Percent</TableColumn>
                     <TableColumn key={"mardens_price"}>Mardens Price</TableColumn>
@@ -169,8 +172,11 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                                 {
                                     const employee = getKeyValue(item, key) as Employee;
                                     return (<TableCell className={"capitalize"}>{employee.first_name.toLowerCase()} {employee.last_name.toLowerCase()}</TableCell>);
-                                }
-                                if (key === "actions")
+                                } else if (key === "description")
+                                {
+
+                                    return (<TableCell className={"max-w-40 !truncate"}>{getKeyValue(item, key)}</TableCell>);
+                                } else if (key === "actions")
                                 {
                                     return (
                                         <TableCell className={"w-0"}>
@@ -206,7 +212,7 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                                         </TableCell>
                                     );
                                 }
-                                return (<TableCell>{getKeyValue(item, key)}</TableCell>);
+                                return (<TableCell className={"max-w-4 !truncate"}>{getKeyValue(item, key)}</TableCell>);
                             }}
                         </TableRow>
                     )}
