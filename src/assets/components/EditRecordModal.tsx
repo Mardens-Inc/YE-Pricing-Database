@@ -20,7 +20,6 @@ export default function EditRecordModal(props: EditRecordModalProps)
     }
 
     const [record, setRecord] = useState<DatabaseRow>(props.record);
-    console.log(record)
     return (
         <>
             <Modal isOpen={props.isOpen} onOpenChange={props.onOpenChange}>
@@ -30,6 +29,37 @@ export default function EditRecordModal(props: EditRecordModalProps)
                             <ModalHeader>Edit Record</ModalHeader>
                             <ModalBody>
                                 <div className={"flex flex-col gap-3"}>
+                                    <div id={"readonly-data"} className={"opacity-50 w-full flex flex-col"}>
+                                        <div className={"flex flex-row gap-1 w-full"}>
+                                            Employee:
+                                            <span className={"font-semibold capitalize"}>{`${record.employee.first_name} ${record.employee.last_name}`.toLowerCase()}</span>
+                                        </div>
+                                        <div className={"flex flex-row gap-1 w-full"}>
+                                            Store:
+                                            <span className={"font-semibold capitalize"}>{record.store}</span>
+                                        </div>
+                                        <div className={"flex flex-row gap-1 w-full"}>
+                                            Created At:
+                                            <span className={"font-semibold"}>{
+                                                (() =>
+                                                {
+                                                    const date = new Date(record.created_at);
+                                                    return (`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+                                                })()
+                                            }</span>
+                                        </div>
+                                        {record.created_at !== record.updated_at &&
+                                            <div className={"flex flex-row gap-1 w-full mr-auto"}>
+                                                Updated At:
+                                                <span className={"font-semibold"}>{
+                                                    (() =>
+                                                    {
+                                                        const date = new Date(record.updated_at);
+                                                        return (`${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+                                                    })()}</span>
+                                            </div>
+                                        }
+                                    </div>
                                     <Input
                                         label={"Tag Number"}
                                         value={record.tag_number.toString()}
@@ -39,6 +69,11 @@ export default function EditRecordModal(props: EditRecordModalProps)
                                     <Autocomplete
                                         label={"Department"}
                                         onChange={(e) => setRecord({...record, department: e.target.value})}
+                                        onSelectionChange={(e) =>
+                                        {
+                                            console.log(e)
+                                            setRecord({...record, department: e as string});
+                                        }}
                                         defaultItems={all_departments}
                                         defaultSelectedKey={all_departments.filter(dept => dept.name.toLowerCase() === record.department.toLowerCase())[0].name}
                                     >
