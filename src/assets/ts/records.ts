@@ -2,10 +2,11 @@ import {DatabaseRow} from "../components/DatabaseListComponent.tsx";
 import Stores from "./stores.ts";
 import {all_departments} from "../pages/DepartmentsPage.tsx";
 import $ from "jquery";
+import {getCurrentEmployee} from "./useEmployeeList.ts";
 
 export interface Record
 {
-    id: number;
+    id?: number;
     tag_number: number;
     store: number;
     department: number;
@@ -14,8 +15,8 @@ export interface Record
     quantity: number;
     employee: number;
     description: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at?: Date;
+    updated_at?: Date;
 }
 
 export interface DatabaseResult
@@ -45,7 +46,11 @@ export const DEFAULT_RECORD_SEARCH_OPTIONS: RecordSearchOptions = {
         to: new Date()
     },
     limit: 10,
-    page: 1
+    page: 1,
+    tag_number: undefined,
+    store: undefined,
+    department: undefined,
+    employee: undefined
 };
 
 export interface DateRange
@@ -59,19 +64,36 @@ export default class Records
     public static async search(options: RecordSearchOptions = DEFAULT_RECORD_SEARCH_OPTIONS): Promise<DatabaseResult>
     {
         const uri = new URL("https://yeinv.mardens.com/api/");
-        if (options.tag_number) uri.searchParams.append("tag_number", options.tag_number.toString());
-        if (options.store) uri.searchParams.append("store", options.store.toString());
-        if (options.department) uri.searchParams.append("department", options.department.toString());
-        if (options.employee) uri.searchParams.append("employee", options.employee.toString());
-        if (options.period)
+        if (Object.keys(options).includes("tag_number")) uri.searchParams.append("tag_number", options.tag_number!.toString());
+        if (Object.keys(options).includes("store")) uri.searchParams.append("store", options.store!.toString());
+        if (Object.keys(options).includes("department")) uri.searchParams.append("department", options.department!.toString());
+        if (Object.keys(options).includes("employee")) uri.searchParams.append("employee", options.employee!.toString());
+        if (Object.keys(options).includes("period"))
         {
-            uri.searchParams.append("from", options.period.from.toISOString());
-            uri.searchParams.append("to", options.period.to.toISOString());
+            uri.searchParams.append("from", options.period!.from.toISOString());
+            uri.searchParams.append("to", options.period!.to.toISOString());
         }
+        uri.searchParams.append("asc", "false");
         if (options.limit) uri.searchParams.append("limit", options.limit.toString());
         if (options.page) uri.searchParams.append("page", options.page.toString());
         return $.get(uri.toString());
     }
+
+    public static async add(record: Record): Promise<void>
+    {
+        return $.ajax("https://yeinv.mardens.com/api/", {method: "POST", data: JSON.stringify(record), contentType: "application/json"});
+    }
+
+    public static async update(record: Record): Promise<void>
+    {
+        return $.ajax(`https://yeinv.mardens.com/api/${record.id}`, {method: "PATCH", data: record, contentType: "application/json"});
+    }
+
+    public static async delete(id: number): Promise<void>
+    {
+        return $.ajax(`https://yeinv.mardens.com/api/${id}`, {method: "DELETE"});
+    }
+
 
 }
 
@@ -79,7 +101,7 @@ export async function recordToDatabaseRow(record: Record): Promise<DatabaseRow>
 {
     const matchedStore = Stores.getStores().find(i => i.id === record.store);
     const matchedDepartment = all_departments.find((_, index) => index === record.department);
-    const employee = await $.get(`https://employees.mardens.com/api/${record.employee}`);
+    const employee = getCurrentEmployee()?.employee_id === record.employee ? getCurrentEmployee() : await $.get(`https://employees.mardens.com/api/${record.employee}`);
 
     if (!employee)
     {
@@ -98,10 +120,11 @@ export async function recordToDatabaseRow(record: Record): Promise<DatabaseRow>
 
     return {
         ...record,
+        id: record.id ?? 0,
         store: matchedStore?.name,
         department: matchedDepartment?.name,
         employee,
-        created_at: record.created_at.toString(),
-        updated_at: record.updated_at.toString()
+        created_at: record.created_at?.toString() ?? "",
+        updated_at: record.updated_at?.toString() ?? ""
     };
 }
