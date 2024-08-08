@@ -8,6 +8,14 @@ export interface Employee
     location: string
 }
 
+export function getCurrentEmployee(): Employee | null{
+    const employee = window.localStorage.getItem("employee");
+    if(employee){
+        return JSON.parse(employee);
+    }
+    return null;
+}
+
 export function useEmployeeList(search?: string)
 {
     const [items, setItems] = useState<Employee[]>([]);
