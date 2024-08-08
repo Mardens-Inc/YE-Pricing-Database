@@ -1,5 +1,5 @@
 import {Button, cn, Input, Switch} from "@nextui-org/react";
-import Authentication, {UserProfile} from "../ts/authentication";
+import Authentication, {LoginResponse, UserProfile} from "../ts/authentication";
 import {useState} from "react";
 import EmployeesAutocomplete from "../components/EmployeesAutocomplete.tsx";
 import {useNavigate} from "react-router-dom";
@@ -19,6 +19,20 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
     const [loggingIn, setLoggingIn] = useState(false);
     const [employee, setEmployee] = useState<Employee | null>(null);
     const navigate = useNavigate();
+
+    auth.loginWithTokenFromCookie().then(response =>
+    {
+        try
+        {
+            if (response !== false && typeof response === "object" && (response as LoginResponse).success)
+            {
+                navigate("/stores/");
+            }
+        } catch (e)
+        {
+            console.error(e);
+        }
+    });
 
 
     const tryToLogin = async () =>
