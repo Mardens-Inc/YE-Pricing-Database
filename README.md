@@ -31,3 +31,9 @@ The database is built using MySQL. The database schema can be found below or in 
 | updated_at    | DATETIME | Yes  | CURRENT_TIMESTAMP | ON UPDATE CURRENT_TIMESTAMP |
 
 ## Screenshots
+![image](https://github.com/user-attachments/assets/62037936-312a-4ff7-9805-e5230215d2c8)
+![image](https://github.com/user-attachments/assets/e0dd534b-49f1-417b-a198-ab1e16132acd)
+![image](https://github.com/user-attachments/assets/85db5eda-db11-47ff-a35b-eef9508d5a62)
+![image](https://github.com/user-attachments/assets/596a132b-d3cc-4d3b-88d7-089d68c47d84)
+
+
