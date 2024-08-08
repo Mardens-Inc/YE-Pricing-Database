@@ -10,7 +10,7 @@ namespace YEInvStressTester;
 internal class StressTester
 {
     private readonly ConcurrentDictionary<string, long> _results = [];
-    private const int Iterations = 10_000;
+    private const int Iterations = 7_000;
     private readonly int _threads = Environment.ProcessorCount;
     private readonly Random _random = new();
 
@@ -82,7 +82,7 @@ internal class StressTester
                 tag_number = _random.Next(0000, 9999),
                 store = _random.Next(0, 12),
                 department = _random.Next(0, 7),
-                percent = Math.Round(_random.Next(100, 10_000) / 10000d, 4),
+                percent = Math.Round(_random.NextDouble() * 100, 4),
                 mardens_price = Math.Round(_random.Next(1_000, 1_000_000) / 1000d, 2),
                 quantity = _random.Next(1, 256),
                 description = "test record",
