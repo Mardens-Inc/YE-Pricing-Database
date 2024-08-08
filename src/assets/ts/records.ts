@@ -86,12 +86,12 @@ export default class Records
 
     public static async update(record: Record): Promise<void>
     {
-        return $.ajax(`https://yeinv.mardens.com/api/${record.id}`, {method: "PATCH", data: record, contentType: "application/json"});
+        return $.ajax(`https://yeinv.mardens.com/api/?id=${record.id}`, {method: "PATCH", data: JSON.stringify(record), contentType: "application/json"});
     }
 
     public static async delete(id: number): Promise<void>
     {
-        return $.ajax(`https://yeinv.mardens.com/api/${id}`, {method: "DELETE"});
+        return $.ajax(`https://yeinv.mardens.com/api/?id=${id}`, {method: "DELETE"});
     }
 
 
@@ -126,5 +126,36 @@ export async function recordToDatabaseRow(record: Record): Promise<DatabaseRow>
         employee,
         created_at: record.created_at?.toString() ?? "",
         updated_at: record.updated_at?.toString() ?? ""
+    };
+}
+
+export async function databaseRowToRecord(row: DatabaseRow): Promise<Record>
+{
+    const matchedStore = Stores.getStores().find(i => i.name === row.store);
+    const matchedDepartment = all_departments.find(i => i.name === row.department);
+    const employee = getCurrentEmployee()?.employee_id === row.employee.employee_id ? getCurrentEmployee() : await $.get(`https://employees.mardens.com/api/${row.employee.employee_id}`);
+
+    if (!employee)
+    {
+        throw new Error("Employee not found");
+    }
+
+    if (!matchedStore)
+    {
+        throw new Error("Store not found");
+    }
+
+    if (!matchedDepartment)
+    {
+        throw new Error("Department not found");
+    }
+
+    return {
+        ...row,
+        store: matchedStore?.id,
+        department: all_departments.findIndex(i => i.name === row.department),
+        employee: employee.employee_id,
+        created_at: new Date(row.created_at),
+        updated_at: new Date(row.updated_at)
     };
 }
