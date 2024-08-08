@@ -28,6 +28,7 @@ export interface DatabaseListProps
     store: string;
     department: string;
     employee: Employee;
+    isRefreshing: boolean;
 }
 
 
@@ -43,11 +44,11 @@ export default function DatabaseListComponent(props: DatabaseListProps)
     const [items, setItems] = useState<DatabaseRow[]>([]);
 
 
-    let pages = 0;
+    const [pages, setPages] = useState(1);
     const [page, setPage] = useState(1);
-
-    useEffect(() =>
+    const refresh = () =>
     {
+
         Records.search({
             employee: props.employee.employee_id,
             page,
@@ -55,10 +56,15 @@ export default function DatabaseListComponent(props: DatabaseListProps)
             department: all_departments.findIndex(department => department.name.toLowerCase() === props.department.toLowerCase())
         }).then(async result =>
         {
+            console.log(result);
             setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
-            pages = result.last_page;
+            setPages(result.last_page);
         });
-    }, [props.employee, props.store, props.department]);
+    };
+    useEffect(() =>
+    {
+        refresh();
+    }, [page, props.isRefreshing]);
 
 
     return (
@@ -66,13 +72,18 @@ export default function DatabaseListComponent(props: DatabaseListProps)
             <ConfirmModal
                 title={"Delete"}
                 message={"Are you sure you want to delete this record?"}
-                onClose={(value) =>
+                onClose={async (value) =>
                 {
                     if (value)
                     {
-                        console.log(`Deleting ${deletingId}`);
-                        setDeletingId(null);
+                        if (deletingId !== null)
+                        {
+                            console.log(`Deleting ${deletingId}`);
+                            await Records.delete(deletingId);
+                            refresh();
+                        }
                     }
+                    setDeletingId(null);
                 }}
                 isOpen={deletingId !== null}
                 onOpenChange={
@@ -118,7 +129,7 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                 bottomContent={
                     (() =>
                     {
-                        if (pages === 0) return (<></>);
+                        if (pages === 1) return (<></>);
                         return (<div className={"flex w-full justify-center"}>
                             <Pagination
                                 isCompact
@@ -153,7 +164,7 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                                     return (<TableCell className={"text-primary"}>${(getKeyValue(item, key) as number).toFixed(2)}</TableCell>);
                                 } else if (key === "percent")
                                 {
-                                    return (<TableCell className={"text-success"}>{((getKeyValue(item, key) as number) * 100).toFixed(2)}%</TableCell>);
+                                    return (<TableCell className={"text-success"}>{getKeyValue(item, key) as number}%</TableCell>);
                                 } else if (key === "employee")
                                 {
                                     const employee = getKeyValue(item, key) as Employee;
