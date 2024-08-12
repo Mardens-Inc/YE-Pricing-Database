@@ -48,3 +48,11 @@ pub struct DBResult {
     pub count: i32,
     pub total: i32,
 }
+
+#[derive(Serialize, Deserialize)]
+pub struct Employee {
+    pub employee_id: i32,
+    pub first_name: String,
+    pub last_name: String,
+    pub location: String,
+}
