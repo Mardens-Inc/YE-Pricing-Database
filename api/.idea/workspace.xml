@@ -8,15 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/openapi.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db_access.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/db_access.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/httaccess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/httaccess.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/assets/components/DatabaseListComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/components/DatabaseListComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/assets/pages/ProcessingPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/pages/ProcessingPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/assets/ts/records.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/ts/records.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/assets/ts/useEmployeeList.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/ts/useEmployeeList.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../tests/YEInvStressTester/StressTester.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../tests/YEInvStressTester/StressTester.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,6 +200,7 @@
       <workItem from="1722959793619" duration="1699000" />
       <workItem from="1723044523001" duration="6368000" />
       <workItem from="1723125432799" duration="993000" />
+      <workItem from="1723469420638" duration="2619000" />
     </task>
     <task id="LOCAL-00001" summary="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file.">
       <option name="closed" value="true" />
@@ -387,5 +385,16 @@
     <MESSAGE value="Improve error handling for database config retrieval&#10;&#10;Replaced unwrap with proper error handling for `get_config` function to prevent panics and return better error messages. This enhances the robustness of the application startup process." />
     <MESSAGE value="Add WSL configuration for remote builds&#10;&#10;Added WSL - Ubuntu-22.04 as a remote target with necessary Cargo and rustc paths. Updated workspace.xml for new configurations and adjusted local task settings to support remote builds through WSL. Enhanced HTTP server with update and delete services." />
     <option name="LAST_COMMIT_MESSAGE" value="Add WSL configuration for remote builds&#10;&#10;Added WSL - Ubuntu-22.04 as a remote target with necessary Cargo and rustc paths. Updated workspace.xml for new configurations and adjusted local task settings to support remote builds through WSL. Enhanced HTTP server with update and delete services." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/db_access.rs</url>
+          <line>461</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
