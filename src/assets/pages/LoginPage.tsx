@@ -4,6 +4,7 @@ import {useState} from "react";
 import EmployeesAutocomplete from "../components/EmployeesAutocomplete.tsx";
 import {useNavigate} from "react-router-dom";
 import {Employee} from "../ts/useEmployeeList.ts";
+import $ from "jquery";
 
 
 export default function LoginPage({onLogin}: { onLogin: (username: string, password: string, profile: UserProfile, employee: Employee) => void })
@@ -85,6 +86,11 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
         }
         setLoggingIn(false);
     };
+
+    $("input").on("keyup", async e =>
+    {
+        if (e.key === "Enter") await tryToLogin();
+    });
 
     return (
         <div className={"mx-auto w-[90%] sm:w-[90%] md:w-[70%] lg:w-[40%] gap-3 flex flex-col"}>
