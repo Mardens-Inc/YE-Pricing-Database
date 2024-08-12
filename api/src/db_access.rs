@@ -1,8 +1,9 @@
 use actix_web::web::Data;
 use mysql::prelude::Queryable;
+use std::collections::HashMap;
 
 use crate::database_config::DatabaseConfig;
-use crate::database_row_entry::{DBResult, DatabaseInsertEntry, DatabaseRowEntry};
+use crate::database_row_entry::{DBResult, DatabaseInsertEntry, DatabaseRowEntry, Employee};
 
 /// Executes a database query to retrieve a range of records based on the provided parameters.
 ///
@@ -383,6 +384,29 @@ pub async fn export(config: Data<DatabaseConfig>) -> Result<String, String> {
 		Ok(c) => c,
 		Err(e) => return Err(e),
 	};
+	let client =
+		match reqwest::Client::builder()
+			.danger_accept_invalid_certs(true)
+			.build() {
+			Ok(c) => c,
+			Err(e) => return Err(e.to_string()),
+		};
+	let employees: HashMap<i32, Employee> = match client
+		.get("https://employees.mardens.com/api/")
+		.send()
+		.await
+	{
+		Ok(res) => {
+			let employees: Vec<Employee> =
+				match res.json().await
+				{
+					Ok(e) => e,
+					Err(e) => return Err(e.to_string()),
+				};
+			employees.into_iter().map(|e| (e.employee_id, e)).collect()
+		},
+		Err(e) => return Err(e.to_string()),
+	};
 
 	let result: Vec<DatabaseRowEntry> =
 		match connection.query_map("SELECT * FROM `years-end-inventory`", |row: mysql::Row| -> DatabaseRowEntry {
@@ -492,6 +516,16 @@ pub async fn export(config: Data<DatabaseConfig>) -> Result<String, String> {
 			index += 1;
 		}
 
+		// map employee id to employee name
+		let mut employee = row.employee.to_string();
+		if employees.contains_key(&row.employee) {
+			employee = match employees.get(&row.employee) {
+				Some(e) => format!("{} {}", e.first_name, e.last_name),
+				None => format!("Unknown Employee ID {}", row.employee),
+			};
+		}
+
+
 		csv_writer.write_record(&[
 			row.id.to_string(),
 			row.tag_number.to_string(),
@@ -501,7 +535,7 @@ pub async fn export(config: Data<DatabaseConfig>) -> Result<String, String> {
 			row.mardens_price.to_string(),
 			row.quantity.to_string(),
 			row.description,
-			row.employee.to_string(),
+			employee,
 			row.created_at,
 			row.updated_at,
 		]).unwrap();
