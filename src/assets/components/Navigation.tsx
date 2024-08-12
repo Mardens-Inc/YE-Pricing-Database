@@ -84,6 +84,13 @@ export default function Navigation({employee}: { employee: Employee | null })
                             >
                                 Change Store
                             </DropdownItem>
+                            <DropdownItem
+                                closeOnSelect={true}
+                                description={"View the full list of items."}
+                                onClick={() => navigate("/list")}
+                            >
+                                View Full List
+                            </DropdownItem>
                             <DropdownItem closeOnSelect={false}>
                                 <ThemeSwitcher/>
                             </DropdownItem>
