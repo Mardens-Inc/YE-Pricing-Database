@@ -9,16 +9,21 @@ import $ from "jquery";
 
 export default function LoginPage({onLogin}: { onLogin: (username: string, password: string, profile: UserProfile, employee: Employee) => void })
 {
+
+    // Form Data
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [employee, setEmployee] = useState<Employee | null>(null);
     const [showPassword, setShowPassword] = useState(false);
+
+    // Error Handling
     const [error, setError] = useState("");
     const [usernameError, setUsernameError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [employeeError, setEmployeeError] = useState("");
+
     const auth = new Authentication(false);
     const [loggingIn, setLoggingIn] = useState(false);
-    const [employee, setEmployee] = useState<Employee | null>(null);
     const navigate = useNavigate();
 
     auth.loginWithTokenFromCookie().then(response =>
@@ -38,6 +43,7 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
 
     const tryToLogin = async () =>
     {
+        console.log(employee);
         setLoggingIn(true);
         setError("");
         setUsernameError("");
@@ -53,10 +59,22 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
             {
                 setPasswordError("Please fill in this field.");
             }
-            if (employee === undefined)
+            if (!employee)
             {
                 setEmployeeError("Please select an employee.");
             }
+            // focus on the first empty field
+            if (username === "")
+            {
+                $("#username").trigger("focus");
+            } else if (password === "")
+            {
+                $("#password").trigger("focus");
+            } else if (!employee)
+            {
+                $("#employee-autocomplete").trigger("focus");
+            }
+
             setLoggingIn(false);
             return;
         }
@@ -95,16 +113,33 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
     return (
         <div className={"mx-auto w-[90%] sm:w-[90%] md:w-[70%] lg:w-[40%] gap-3 flex flex-col"}>
             <h1 className={"text-6xl mb-10 sm:text-6xl md:text-8xl lg:text-9xl"}>Login</h1>
-            <Input label={"Username"} isRequired value={username} onValueChange={value =>
-            {
-                setUsername(value);
-                setUsernameError("");
-            }} errorMessage={usernameError} isInvalid={error !== "" || usernameError !== ""}/>
-            <Input label={"Password"} type={showPassword ? "text" : "password"} value={password} isRequired onValueChange={value =>
-            {
-                setPassword(value);
-                setPasswordError("");
-            }} errorMessage={passwordError} isInvalid={error !== "" || passwordError !== ""}/>
+            <Input
+                id={"username"}
+                label={"Username"}
+                isRequired
+                value={username}
+                onValueChange={value =>
+                {
+                    setUsername(value);
+                    setUsernameError("");
+                }}
+                errorMessage={usernameError}
+                isInvalid={error !== "" || usernameError !== ""}
+            />
+            <Input
+                id={"password"}
+                label={"Password"}
+                type={showPassword ? "text" : "password"}
+                value={password}
+                isRequired
+                onValueChange={value =>
+                {
+                    setPassword(value);
+                    setPasswordError("");
+                }}
+                errorMessage={passwordError}
+                isInvalid={error !== "" || passwordError !== ""}
+            />
             <EmployeesAutocomplete
                 error={employeeError}
                 onSelectionChange={item =>
