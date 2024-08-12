@@ -23,6 +23,7 @@ export default function EmployeesAutocomplete({onSelectionChange, error}: { onSe
 
     return (
         <Autocomplete
+            id={"employee-autocomplete"}
             label={"Employee"}
             description={"Select your employee ID or username."}
             placeholder={"Search for an employee..."}
