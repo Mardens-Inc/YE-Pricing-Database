@@ -7,24 +7,38 @@ import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Employee} from "../ts/useEmployeeList.ts";
 
-
 export default function Navigation({employee}: { employee: Employee | null })
 {
 
     const auth = new Authentication(false);
     const navigate = useNavigate();
     const [emp, setEmployee] = useState<Employee | null>(employee);
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    if(!employee && window.location.pathname !== "/"){
+    if (!employee && window.location.pathname !== "/")
+    {
         navigate("/");
     }
 
 
-    auth.loginWithTokenFromCookie().then(res=>{
-        if(!res && window.location.pathname !== "/"){
+    auth.loginWithTokenFromCookie().then(res =>
+    {
+        if (!res && window.location.pathname !== "/")
+        {
             navigate("/");
         }
-    })
+        if (res && typeof res === "object")
+        {
+            try
+            {
+                setIsAdmin(auth.getUserProfile().admin);
+                console.log(auth.getUserProfile());
+            } catch
+            {
+                setIsAdmin(false);
+            }
+        }
+    });
 
 
     useEffect(() =>
@@ -84,16 +98,34 @@ export default function Navigation({employee}: { employee: Employee | null })
                             >
                                 Change Store
                             </DropdownItem>
-                            <DropdownItem
-                                closeOnSelect={true}
-                                description={"View the full list of items."}
-                                onClick={() => navigate("/list")}
-                            >
-                                View Full List
-                            </DropdownItem>
                             <DropdownItem closeOnSelect={false}>
                                 <ThemeSwitcher/>
                             </DropdownItem>
+                            {isAdmin &&
+                                <DropdownSection title={"Admin zone"}>
+                                    <DropdownItem
+                                        closeOnSelect={true}
+                                        description={"View the full list of items."}
+                                        onClick={() => navigate("/list")}
+                                    >
+                                        View Full List
+                                    </DropdownItem>
+                                    <DropdownItem
+                                        closeOnSelect={true}
+                                        description={"View the full list of items."}
+                                        onClick={() =>
+                                        {
+                                            const link = document.createElement("a");
+                                            link.href = "https://yeinv.mardens.com/api/export";
+                                            link.click();
+                                            console.log("Exporting database");
+                                        }}
+                                    >
+                                        Export List
+                                    </DropdownItem>
+                                </DropdownSection>
+                            }
+
                             <DropdownSection title={"Danger zone"}>
                                 <DropdownItem
                                     color={"danger"}
