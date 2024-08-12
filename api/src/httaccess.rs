@@ -113,6 +113,17 @@ pub async fn delete(config: Data<DatabaseConfig>, query: web::Query<UpdateQuery>
 	}
 }
 
+#[get("/export")]
+pub async fn export(config: Data<DatabaseConfig>) -> impl Responder {
+	match db_access::export(config).await {
+		Ok(result) => HttpResponse::Ok()
+			.insert_header(("Content-Type", "text/csv"))
+			.insert_header(("Content-Disposition", "attachment; filename=years-end-inventory-db-export.csv"))
+			.body(result),
+		Err(e) => HttpResponse::InternalServerError().json(json!({"error": e})),
+	}
+}
+
 #[derive(serde::Deserialize)]
 struct UpdateQuery {
 	id: i32,
