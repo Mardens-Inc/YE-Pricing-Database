@@ -25,10 +25,11 @@ export interface DatabaseRow
 
 export interface DatabaseListProps
 {
-    store: string;
-    department: string;
-    employee: Employee;
+    store?: string;
+    department?: string;
+    employee?: Employee;
     isRefreshing: boolean;
+    limit?: number;
 }
 
 
@@ -48,18 +49,30 @@ export default function DatabaseListComponent(props: DatabaseListProps)
     const [page, setPage] = useState(1);
     const refresh = () =>
     {
-
-        Records.search({
-            employee: props.employee.employee_id,
-            page,
-            store: Stores.getStores().filter(store => store.name.toLowerCase() === props.store.toLowerCase())[0].id,
-            department: all_departments.findIndex(department => department.name.toLowerCase() === props.department.toLowerCase()),
-            limit: 10
-        }).then(async result =>
+        if (props.store === undefined || props.department === undefined || props.employee === undefined)
         {
-            setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
-            setPages(result.last_page);
-        });
+            Records.search({
+                page,
+                limit: props.limit ?? 10
+            }).then(async result =>
+            {
+                setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
+                setPages(result.last_page);
+            });
+        } else
+        {
+            Records.search({
+                employee: props.employee.employee_id,
+                page,
+                store: Stores.getStores().filter(store => store.name.toLowerCase() === props.store!.toLowerCase())[0].id,
+                department: all_departments.findIndex(department => department.name.toLowerCase() === props.department!.toLowerCase()),
+                limit: props.limit ?? 10
+            }).then(async result =>
+            {
+                setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
+                setPages(result.last_page);
+            });
+        }
     };
     useEffect(() =>
     {
@@ -125,7 +138,7 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                 classNames={{
                     wrapper: "w-[90%] mx-auto mb-10 h-[80vh]",
                     tbody: cn(
-                        `overflow-y-scroll`
+                        `overflow-y-scroll relative`,
                     )
 
                 }}
