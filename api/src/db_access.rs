@@ -2,7 +2,7 @@ use actix_web::web::Data;
 use mysql::prelude::Queryable;
 
 use crate::database_config::DatabaseConfig;
-use crate::database_row_entry::{DatabaseInsertEntry, DatabaseRowEntry, DBResult};
+use crate::database_row_entry::{DBResult, DatabaseInsertEntry, DatabaseRowEntry};
 
 /// Executes a database query to retrieve a range of records based on the provided parameters.
 ///
@@ -376,4 +376,139 @@ pub fn update(
 		Ok(_) => Ok(()),
 		Err(e) => return Err(e.to_string()),
 	}
+}
+
+pub async fn export(config: Data<DatabaseConfig>) -> Result<String, String> {
+	let mut connection = match get_connection(config) {
+		Ok(c) => c,
+		Err(e) => return Err(e),
+	};
+
+	let result: Vec<DatabaseRowEntry> =
+		match connection.query_map("SELECT * FROM `years-end-inventory`", |row: mysql::Row| -> DatabaseRowEntry {
+			DatabaseRowEntry {
+				// Each field of the DatabaseRowEntry struct is fetched from the row of data 
+				// from the database. If the field cannot be fetched, or is NULL, a default value is used instead.
+				id: row.get("id").unwrap_or_default(),
+				tag_number: row.get("tag_number").unwrap_or_default(),
+				store: row.get("store").unwrap_or_default(),
+				department: row.get("department").unwrap_or_default(),
+				percent: row.get("percent").unwrap_or_default(),
+				mardens_price: row.get("mardens_price").unwrap_or_default(),
+				quantity: row.get("quantity").unwrap_or_default(),
+				description: row.get("description").unwrap_or(String::new()), // An empty string is used as the default value when 'description' is NULL.
+				employee: row.get("employee").unwrap_or_default(),
+
+				// 'created_at' and 'updated_at' are fetched as chrono::NaiveDateTime objects from the database.
+				// If they cannot be fetched or are NULL, the current time is used as the default value.
+				// After retrieving these datetime objects, they are formatted as strings in the "YYYY-MM-DD HH:MM:SS" format.
+				created_at: (row
+					.get("created_at")
+					.unwrap_or(chrono::NaiveDateTime::default()))
+					.format("%F %X")
+					.to_string(),
+				updated_at: (row
+					.get("updated_at")
+					.unwrap_or(chrono::NaiveDateTime::default()))
+					.format("%F %X")
+					.to_string(),
+			}
+		}) {
+			Ok(r) => r,
+			Err(e) => return Err(e.to_string()),
+		};
+
+	let mut csv_writer = csv::Writer::from_writer(vec![]);
+	csv_writer.write_record(&[
+		"id",
+		"tag_number",
+		"store",
+		"department",
+		"percent",
+		"mardens_price",
+		"quantity",
+		"description",
+		"employee",
+		"created_at",
+		"updated_at",
+	]).unwrap();
+
+	let stores = vec![
+		"Sanford",
+		"Biddeford",
+		"Scarborough",
+		"Gray",
+		"Lewiston",
+		"Waterville",
+		"Brewer",
+		"Ellsworth",
+		"Calais",
+		"Lincoln",
+		"Houlton",
+		"Presque Isle",
+		"Madawaska"
+	];
+
+	let departments = vec![
+		"Clothing",
+		"Shoes",
+		"Hardware",
+		"Furniture",
+		"Flooring",
+		"Fabric",
+		"General",
+		"Food"
+	];
+	for row in result {
+		let mut store = row.store.to_string();
+		let mut department = row.department.to_string();
+
+
+		if row.store > 0 && row.store <= stores.len() as i32 {
+			store = stores[row.store as usize - 1].to_string();
+		}
+
+		if row.department > 0 && row.department <= departments.len() as i32 {
+			department = departments[row.department as usize - 1].to_string();
+		}
+
+		// map store index to store name
+		let mut index = 0;
+		while index < stores.len() {
+			if row.store == index as i32 {
+				store = stores[index].to_string();
+				break;
+			}
+			index += 1;
+		}
+
+		// map department index to department name
+		index = 0;
+		while index < departments.len() {
+			if row.department == index as i32 {
+				department = departments[index].to_string();
+				break;
+			}
+			index += 1;
+		}
+
+		csv_writer.write_record(&[
+			row.id.to_string(),
+			row.tag_number.to_string(),
+			store,
+			department,
+			row.percent.to_string(),
+			row.mardens_price.to_string(),
+			row.quantity.to_string(),
+			row.description,
+			row.employee.to_string(),
+			row.created_at,
+			row.updated_at,
+		]).unwrap();
+	}
+	if csv_writer.flush().is_err() {
+		return Err("Failed to flush CSV writer".to_string());
+	}
+
+	Ok(String::from_utf8(csv_writer.into_inner().unwrap()).unwrap())
 }
