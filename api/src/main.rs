@@ -1,7 +1,7 @@
-use actix_web::{App, dev::Service as _, HttpServer, web};
 use actix_web::http::header;
+use actix_web::{dev::Service as _, web, App, HttpServer};
 
-use httaccess::{delete, insert, range, update};
+use httaccess::{delete, insert, range, update, export};
 
 mod database_config;
 mod database_row_entry;
@@ -31,6 +31,7 @@ async fn main() -> std::io::Result<()> {
 			.service(insert)
 			.service(update)
 			.service(delete)
+			.service(export)
 	})
 		.bind(("127.0.0.1", 1870))?
 		.run()
