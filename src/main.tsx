@@ -13,6 +13,7 @@ import Stores from "./assets/ts/stores.ts";
 import DepartmentsPage from "./assets/pages/DepartmentsPage.tsx";
 import ProcessingPage from "./assets/pages/ProcessingPage.tsx";
 import {Employee} from "./assets/ts/useEmployeeList.ts";
+import FullListPage from "./assets/pages/FullListPage.tsx";
 
 applyTheme();
 
@@ -44,6 +45,7 @@ function PageContent()
                     <Route path="/stores" element={<StoresPage/>}/>
                     <Route path="/stores/:store" element={<DepartmentsPage/>}/>
                     <Route path="/stores/:store/:department" element={<ProcessingPage/>}/>
+                    <Route path="/list" element={<FullListPage/>}/>
                 </Route>
             </Routes>
         </NextUIProvider>
