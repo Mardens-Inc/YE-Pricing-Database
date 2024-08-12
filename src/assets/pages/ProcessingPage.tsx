@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import Stores from "../ts/stores.ts";
 import DatabaseListComponent from "../components/DatabaseListComponent.tsx";
-import {Button, Input, Slider, Textarea} from "@nextui-org/react";
+import {Button, Input, Textarea} from "@nextui-org/react";
 import {Employee} from "../ts/useEmployeeList.ts";
 import {useState} from "react";
 import $ from "jquery";
@@ -100,11 +100,9 @@ export default function ProcessingPage()
         setMardensPrice("");
         setQuantity("");
         $("#form-restart-input").trigger("focus");
-        setTimeout(() =>
-        {
-            setIsAdding(false);
-            setIsRefreshing(prevState => !prevState);
-        }, 1000);
+        setIsAdding(false);
+        setIsRefreshing(prevState => !prevState);
+        $("#mardens-price-input").trigger("focus");
     };
 
     $("#record-data-form input")
@@ -154,6 +152,7 @@ export default function ProcessingPage()
                 <div id={"record-data-form"} className={"flex flex-col gap-3 w-[75%]"}>
                     <div className={"flex flex-row gap-3"}>
                         <Input
+                            id={"mardens-price-input"}
                             label={"Mardens Price or Tag Price"}
                             type={"number"}
                             value={mardensPrice}
@@ -183,56 +182,21 @@ export default function ProcessingPage()
                             isInvalid={quantityError !== ""}
                             errorMessage={quantityError}/>
                     </div>
-                    <Slider
+                    <Input
                         label={"Percentage"}
-                        value={percent}
-                        step={1}
-                        minValue={0}
-                        maxValue={100}
-                        size={"lg"}
-                        showTooltip
-                        showSteps
-                        onChange={
+                        type={"number"}
+                        value={percent.toString()}
+                        onValueChange={
                             (value) =>
                             {
-                                if (Array.isArray(value)) value = value[0];
-                                setPercent(value);
+                                if (value === "") value = "0";
+                                let percent = parseFloat(value);
+                                if (isNaN(percent)) percent = 0;
+                                if (percent < 0) percent = 0;
+                                if (percent > 100) percent = 100;
+                                setPercent(percent);
                             }
                         }
-                        marks={[
-                            {value: 0, label: "0%"},
-                            {value: 25, label: "25%"},
-                            {value: 50, label: "50%"},
-                            {value: 75, label: "75%"},
-                            {value: 100, label: "100%"}
-                        ]}
-                        renderValue={
-                            ({}) =>
-                            {
-                                return (
-                                    <Input
-                                        id={"form-restart-input"}
-                                        type={"number"}
-                                        value={percent.toString()}
-                                        onValueChange={
-                                            (value) =>
-                                            {
-                                                if (value === "") value = "0";
-                                                let percent = parseFloat(value);
-                                                if (isNaN(percent)) percent = 0;
-                                                setPercent(percent);
-                                            }
-                                        }
-
-                                        classNames={{
-                                            base: "w-[4.2rem] text-center"
-                                        }}
-
-                                    />
-                                );
-                            }
-                        }
-
                     />
                     <Button radius={"full"} isLoading={isAdding} onClick={onAdd}>Add</Button>
                 </div>
