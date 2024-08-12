@@ -112,7 +112,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                     </DropdownItem>
                                     <DropdownItem
                                         closeOnSelect={true}
-                                        description={"View the full list of items."}
+                                        description={"Export the full list of items to a CSV file."}
                                         onClick={() =>
                                         {
                                             const link = document.createElement("a");
