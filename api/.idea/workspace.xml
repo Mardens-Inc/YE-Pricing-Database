@@ -8,12 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e379c654-1051-422b-8e4a-13be243814f9.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e379c654-1051-422b-8e4a-13be243814f9.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database_row_entry.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/database_row_entry.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db_access.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/db_access.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +196,7 @@
       <workItem from="1723044523001" duration="6368000" />
       <workItem from="1723125432799" duration="993000" />
       <workItem from="1723469420638" duration="2877000" />
-      <workItem from="1723477430546" duration="1682000" />
+      <workItem from="1723477430546" duration="2619000" />
     </task>
     <task id="LOCAL-00001" summary="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file.">
       <option name="closed" value="true" />
@@ -395,7 +390,39 @@
       <option name="project" value="LOCAL" />
       <updated>1723472236152</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Update reqwest dependency with json feature&#10;&#10;Enhanced reqwest to include the 'json' feature in Cargo.toml. This modification allows for better JSON handling capabilities within the application. No version change was made; only the feature enhancement was applied.">
+      <option name="closed" value="true" />
+      <created>1723479215170</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1723479215170</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Swap collation names and add charset defaults&#10;&#10;Adjusted collation names for various character sets to correct formatting inconsistencies and added 'DefaultForCharset' attribute where missing. This ensures proper default charset handling and resolves potential mismatches in collation settings.">
+      <option name="closed" value="true" />
+      <created>1723479228005</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1723479228005</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Add employee name mapping from API in database access&#10;&#10;This commit enhances the `db_access.rs` module by integrating an external API call to fetch employee details. The employee ID is now mapped to the full employee name in the CSV output, improving data readability and consistency.">
+      <option name="closed" value="true" />
+      <created>1723479244884</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1723479244884</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Add Employee struct to database_row_entry.rs&#10;&#10;Introduced a new Employee struct with fields for employee_id, first_name, last_name, and location. This struct is also annotated with Serialize and Deserialize for JSON handling.">
+      <option name="closed" value="true" />
+      <created>1723479258427</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1723479258427</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -406,9 +433,6 @@
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file." />
-    <MESSAGE value="Add IntelliJ IDEA project configuration files&#10;&#10;This commit includes new `.idea` directory files to accommodate the IntelliJ IDEA project setup. These files define project structure, VCS mappings, auto-import settings, and specific toolchain configurations for the Rust-based project." />
-    <MESSAGE value="Add 'years-end-inventory' table&#10;&#10;Created 'years-end-inventory' table to store inventory details including tag number, store, department, percentage, prices, quantity, description, and employee details. The table includes auto-increment for the primary key and timestamp fields for creation and updates." />
     <MESSAGE value="Update dependencies: add chrono and urlencoding&#10;&#10;Added `chrono` for enhanced date and time handling in serde and mysql features. Included the `urlencoding` crate to support URL encoding tasks. These additions improve functionality and maintain compatibility." />
     <MESSAGE value="Add IntelliJ data source and code style configurations&#10;&#10;This commit introduces new configuration files for IntelliJ IDEA, including data sources for local MySQL databases and project-specific code style settings. These configurations will help streamline database connectivity and maintain consistent coding standards across the project." />
     <MESSAGE value="Add database configuration struct&#10;&#10;Introduce `DatabaseConfig` and `Filemaker` structs with fields for host, user, passwords, and hash. Implemented serialization and deserialization using Serde to facilitate easy reading and writing of configuration data." />
@@ -430,6 +454,10 @@
     <MESSAGE value="Add export service to HTTP server configuration&#10;&#10;Reordered imports for readability and added the new `export` service to the Actix-web application. This ensures the server handles export requests properly." />
     <MESSAGE value="Add export endpoint to httaccess.rs&#10;&#10;Implemented a new endpoint that allows exporting database content as a CSV file. This includes handling headers for content type and file disposition, ensuring the data is downloaded as a CSV attachment." />
     <MESSAGE value="Add CSV export function to db_access module&#10;&#10;Implemented an async function to export year-end inventory data to CSV format. This function retrieves data from the database, maps indexes to human-readable names, and formats timestamp fields for better readability." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add CSV export function to db_access module&#10;&#10;Implemented an async function to export year-end inventory data to CSV format. This function retrieves data from the database, maps indexes to human-readable names, and formats timestamp fields for better readability." />
+    <MESSAGE value="Update reqwest dependency with json feature&#10;&#10;Enhanced reqwest to include the 'json' feature in Cargo.toml. This modification allows for better JSON handling capabilities within the application. No version change was made; only the feature enhancement was applied." />
+    <MESSAGE value="Swap collation names and add charset defaults&#10;&#10;Adjusted collation names for various character sets to correct formatting inconsistencies and added 'DefaultForCharset' attribute where missing. This ensures proper default charset handling and resolves potential mismatches in collation settings." />
+    <MESSAGE value="Add employee name mapping from API in database access&#10;&#10;This commit enhances the `db_access.rs` module by integrating an external API call to fetch employee details. The employee ID is now mapped to the full employee name in the CSV output, improving data readability and consistency." />
+    <MESSAGE value="Add Employee struct to database_row_entry.rs&#10;&#10;Introduced a new Employee struct with fields for employee_id, first_name, last_name, and location. This struct is also annotated with Serialize and Deserialize for JSON handling." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Employee struct to database_row_entry.rs&#10;&#10;Introduced a new Employee struct with fields for employee_id, first_name, last_name, and location. This struct is also annotated with Serialize and Deserialize for JSON handling." />
   </component>
 </project>
