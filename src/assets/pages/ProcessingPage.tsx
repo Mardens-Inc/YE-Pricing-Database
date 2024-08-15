@@ -15,7 +15,7 @@ export default function ProcessingPage()
     // form data
     const [tagNumber, setTagNumber] = useState("");
     const [description, setDescription] = useState("");
-    const [percent, setPercent] = useState<number>(40);
+    const [percent, setPercent] = useState<string>("");
     const [mardensPrice, setMardensPrice] = useState("");
     const [quantity, setQuantity] = useState("");
 
@@ -87,7 +87,7 @@ export default function ProcessingPage()
             tag_number: parseInt(tagNumber),
             store: store.id,
             department: all_departments.findIndex(department => department.name.toLowerCase() === departmentName.toLowerCase()),
-            percent: percent,
+            percent: Number(percent),
             mardens_price: parseFloat(mardensPrice),
             quantity: parseInt(quantity),
             employee: (JSON.parse(window.localStorage.getItem("employee")!) as Employee).employee_id,
@@ -185,7 +185,7 @@ export default function ProcessingPage()
                     <Input
                         label={"Percentage"}
                         type={"number"}
-                        value={percent.toString()}
+                        value={percent}
                         onValueChange={
                             (value) =>
                             {
@@ -194,7 +194,7 @@ export default function ProcessingPage()
                                 if (isNaN(percent)) percent = 0;
                                 if (percent < 0) percent = 0;
                                 if (percent > 100) percent = 100;
-                                setPercent(percent);
+                                setPercent(percent.toString());
                             }
                         }
                     />
