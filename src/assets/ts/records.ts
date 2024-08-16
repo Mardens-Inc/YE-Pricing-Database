@@ -2,7 +2,7 @@ import {DatabaseRow} from "../components/DatabaseListComponent.tsx";
 import Stores from "./stores.ts";
 import {all_departments} from "../pages/DepartmentsPage.tsx";
 import $ from "jquery";
-import {getCurrentEmployee} from "./useEmployeeList.ts";
+import {getCurrentEmployee, getEmployees} from "./useEmployeeList.ts";
 
 export interface Record
 {
@@ -31,6 +31,7 @@ export interface DatabaseResult
 
 export interface RecordSearchOptions
 {
+    query?: string;
     tag_number?: number;
     store?: number;
     department?: number;
@@ -38,6 +39,7 @@ export interface RecordSearchOptions
     period?: DateRange;
     limit?: number;
     page?: number;
+    abortSignal?: AbortSignal;
 }
 
 export const DEFAULT_RECORD_SEARCH_OPTIONS: RecordSearchOptions = {
@@ -50,7 +52,9 @@ export const DEFAULT_RECORD_SEARCH_OPTIONS: RecordSearchOptions = {
     tag_number: undefined,
     store: undefined,
     department: undefined,
-    employee: undefined
+    employee: undefined,
+    query: undefined,
+    abortSignal: new AbortController().signal
 };
 
 export interface DateRange
@@ -65,9 +69,10 @@ export default class Records
     {
         const uri = new URL("https://yeinv.mardens.com/api/");
         if (Object.keys(options).includes("tag_number")) uri.searchParams.append("tag_number", options.tag_number!.toString());
-        if (Object.keys(options).includes("store")) uri.searchParams.append("store", options.store!.toString());
-        if (Object.keys(options).includes("department")) uri.searchParams.append("department", options.department!.toString());
-        if (Object.keys(options).includes("employee")) uri.searchParams.append("employee", options.employee!.toString());
+        if (Object.keys(options).includes("store") && options.store !== undefined) uri.searchParams.append("store", options.store!.toString());
+        if (Object.keys(options).includes("department") && options.department !== undefined) uri.searchParams.append("department", options.department!.toString());
+        if (Object.keys(options).includes("employee") && options.employee) uri.searchParams.append("employee", options.employee!.toString());
+        if (Object.keys(options).includes("query") && options.query) uri.searchParams.append("query", options.query);
         if (Object.keys(options).includes("period"))
         {
             uri.searchParams.append("from", options.period!.from.toISOString());
@@ -76,7 +81,7 @@ export default class Records
         uri.searchParams.append("asc", "false");
         if (options.limit) uri.searchParams.append("limit", options.limit.toString());
         if (options.page) uri.searchParams.append("page", options.page.toString());
-        return $.get(uri.toString());
+        return fetch(uri.toString(), {signal: options.abortSignal}).then(response => response.json());
     }
 
     public static async add(record: Record): Promise<void>
@@ -101,7 +106,7 @@ export async function recordToDatabaseRow(record: Record): Promise<DatabaseRow>
 {
     const matchedStore = Stores.getStores().find(i => i.id === record.store);
     const matchedDepartment = all_departments.find((_, index) => index === record.department);
-    const employee = getCurrentEmployee()?.employee_id === record.employee ? getCurrentEmployee() : await $.get(`https://employees.mardens.com/api/${record.employee}`);
+    const employee = getCurrentEmployee()?.employee_id === record.employee ? getCurrentEmployee() : getEmployees().find(employee => employee.employee_id === record.employee);
 
     if (!employee)
     {
