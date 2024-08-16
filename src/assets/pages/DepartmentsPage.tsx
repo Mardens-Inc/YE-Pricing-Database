@@ -13,7 +13,7 @@ import food from "/src/assets/images/food.webp";
 import StoresPage from "./StoresPage.tsx";
 
 
-interface Department
+export interface Department
 {
     name: string,
     image: string,
