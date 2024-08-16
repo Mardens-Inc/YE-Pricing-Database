@@ -125,6 +125,7 @@ export default function ProcessingPage()
             <div className={"w-[90%] mx-auto my-10 flex flex-row gap-3"}>
                 <div id={"series-data-form"} className={"flex flex-col gap-3 w-[25%]"}>
                     <Input
+                        tabIndex={1}
                         label={"Tag Number"}
                         value={tagNumber}
                         onValueChange={
@@ -140,6 +141,7 @@ export default function ProcessingPage()
                         errorMessage={tagNumberError}
                     />
                     <Textarea
+                        tabIndex={2}
                         label={"Description"}
                         value={description}
                         onValueChange={setDescription}
@@ -152,13 +154,17 @@ export default function ProcessingPage()
                 <div id={"record-data-form"} className={"flex flex-col gap-3 w-[75%]"}>
                     <div className={"flex flex-row gap-3"}>
                         <Input
+                            tabIndex={3}
                             id={"mardens-price-input"}
                             label={"Mardens Price or Tag Price"}
-                            type={"number"}
                             value={mardensPrice}
                             onValueChange={
                                 (value) =>
                                 {
+                                    value = value.replace(/[^0-9.]/g, "");
+                                    let num = parseInt(value);
+                                    if (isNaN(num)) num = 0;
+                                    if (num < 0) value = "0";
                                     setMardensPrice(value);
                                     setMardensPriceError("");
                                 }
@@ -167,13 +173,17 @@ export default function ProcessingPage()
                             isInvalid={mardensPriceError !== ""}
                             errorMessage={mardensPriceError}/>
                         <Input
+                            tabIndex={4}
                             label={"Quantity"}
                             className={"w-[25%]"}
-                            type={"number"}
                             value={quantity}
                             onValueChange={
                                 (value) =>
                                 {
+                                    value = value.replace(/[^0-9]/g, "");
+                                    let num = parseInt(value);
+                                    if (isNaN(num)) num = 0;
+                                    if (num < 0) value = "0";
                                     setQuantity(value);
                                     setQuantityError("");
                                 }
@@ -183,22 +193,31 @@ export default function ProcessingPage()
                             errorMessage={quantityError}/>
                     </div>
                     <Input
+                        tabIndex={5}
                         label={"Percentage"}
-                        type={"number"}
                         value={percent}
+                        onKeyDown={(e) =>
+                        {
+                            if (e.key === "Tab")
+                            {
+                                e.preventDefault();
+                                $("#mardens-price-input").trigger("focus");
+                            }
+                        }}
                         onValueChange={
                             (value) =>
                             {
-                                if (value === "") value = "0";
-                                let percent = parseFloat(value);
-                                if (isNaN(percent)) percent = 0;
-                                if (percent < 0) percent = 0;
-                                if (percent > 100) percent = 100;
-                                setPercent(percent.toString());
+
+                                value = value.replace(/[^0-9.]/g, "");
+                                let percent = parseInt(value);
+                                if (isNaN(percent)) value = "0";
+                                if (percent < 0) value = "0";
+                                if (percent > 100) value = "100";
+                                setPercent(value);
                             }
                         }
                     />
-                    <Button radius={"full"} isLoading={isAdding} onClick={onAdd}>Add</Button>
+                    <Button excludeFromTabOrder radius={"full"} isLoading={isAdding} onClick={onAdd}>Add</Button>
                 </div>
             </div>
 
