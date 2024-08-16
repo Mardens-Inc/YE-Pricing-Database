@@ -1,12 +1,13 @@
 import $ from "jquery";
 
-interface Store
+export interface Store
 {
     id: number,
     name: string,
     address: string,
-    images: any
+    images: { [key: string]: string }
 }
+
 
 export default class Stores
 {
