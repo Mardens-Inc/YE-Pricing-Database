@@ -1,12 +1,15 @@
-import {Button, cn, getKeyValue, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip} from "@nextui-org/react";
+import {Badge, Button, cn, getKeyValue, Pagination, Selection, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip} from "@nextui-org/react";
 import {EditIcon, TrashIcon} from "./Icons.tsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ConfirmModal from "./ConfirmModal.tsx";
 import EditRecordModal from "./EditRecordModal.tsx";
 import {Employee} from "../ts/useEmployeeList.ts";
 import Records, {databaseRowToRecord, recordToDatabaseRow} from "../ts/records.ts";
 import Stores from "../ts/stores.ts";
 import {all_departments} from "../pages/DepartmentsPage.tsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+
 
 export interface DatabaseRow
 {
@@ -27,52 +30,53 @@ export interface DatabaseListProps
 {
     store?: string;
     department?: string;
-    employee?: Employee;
+    employee?: Employee | null;
     isRefreshing: boolean;
     limit?: number;
+    query?: string;
 }
 
 
 export default function DatabaseListComponent(props: DatabaseListProps)
 {
-    if (props.employee === null)
-    {
-        return <></>;
-    }
-
     const [deletingId, setDeletingId] = useState<number | null>(null);
     const [editingRecord, setEditingRecord] = useState<DatabaseRow | null>(null);
     const [items, setItems] = useState<DatabaseRow[]>([]);
-
-
     const [pages, setPages] = useState(1);
     const [page, setPage] = useState(1);
+    const [shouldDeleteSelected, setShouldDeleteSelected] = useState<boolean>(false);
+
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+    let abortControllerRef = useRef<AbortController | null>(null);
+
     const refresh = () =>
     {
-        if (props.store === undefined || props.department === undefined || props.employee === undefined)
+        if (abortControllerRef.current)
         {
-            Records.search({
-                page,
-                limit: props.limit ?? 10
-            }).then(async result =>
-            {
-                setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
-                setPages(result.last_page);
-            });
-        } else
-        {
-            Records.search({
-                employee: props.employee.employee_id,
-                page,
-                store: Stores.getStores().filter(store => store.name.toLowerCase() === props.store!.toLowerCase())[0].id,
-                department: all_departments.findIndex(department => department.name.toLowerCase() === props.department!.toLowerCase()),
-                limit: props.limit ?? 10
-            }).then(async result =>
-            {
-                setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
-                setPages(result.last_page);
-            });
+            abortControllerRef.current.abort("debounced");
         }
+
+        abortControllerRef.current = new AbortController();
+
+        console.log(props);
+        Records.search({
+            query: props.query,
+            employee: props.employee?.employee_id,
+            page,
+            store: props.store ? Stores.getStores().filter(store => store.name.toLowerCase() === props.store!.toLowerCase())[0].id : undefined,
+            department: props.department ? all_departments.findIndex(department => department.name.toLowerCase() === props.department!.toLowerCase()) : undefined,
+            limit: props.limit ?? 10,
+            abortSignal: abortControllerRef.current.signal
+        }).then(async result =>
+        {
+            setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
+            setPages(result.last_page);
+            abortControllerRef.current = null; // Resetting abortController after the request completes
+        }).catch(() =>
+        {
+            abortControllerRef.current = null; // Resetting abortController if the request is aborted or failed
+        });
     };
     useEffect(() =>
     {
@@ -109,6 +113,37 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                     }
                 }
             />
+            <ConfirmModal
+                title={"Delete Multiple"}
+                message={`Are you sure you want to delete ${selectedIds.length} records?`}
+                onClose={async (value) =>
+                {
+                    if (value)
+                    {
+                        if (selectedIds.length > 0)
+                        {
+                            await Promise.all(selectedIds.map(async id =>
+                            {
+                                await Records.delete(id);
+                            }));
+                            setSelectedIds([]);
+                            refresh();
+                            refresh();
+                        }
+                    }
+                    setDeletingId(null);
+                }}
+                isOpen={selectedIds.length > 0 && shouldDeleteSelected}
+                onOpenChange={
+                    async (value) =>
+                    {
+                        if (!value)
+                        {
+                            setShouldDeleteSelected(false);
+                        }
+                    }
+                }
+            />
 
             <EditRecordModal
                 record={editingRecord}
@@ -135,28 +170,77 @@ export default function DatabaseListComponent(props: DatabaseListProps)
             <Table
                 aria-label={"Database Table"}
                 isHeaderSticky
+                selectionMode={"multiple"}
+                selectedKeys={selectedIds.map(String)}
+                onSelectionChange={(keys: Selection) =>
+                {
+                    let ids: number[] = [];
+                    if (keys === "all")
+                    {
+                        ids = items.map(item => item.id);
+                    } else
+                    {
+                        ids = [...keys as Set<string>].map(Number);
+                    }
+                    setSelectedIds(ids);
+                }}
                 classNames={{
                     wrapper: "w-[90%] mx-auto mb-10 h-[80vh]",
                     tbody: cn(
-                        `overflow-y-scroll relative`,
+                        `overflow-y-scroll relative`
                     )
-
+                }}
+                checkboxesProps={{
+                    className: "w-0"
                 }}
                 bottomContent={
                     (() =>
                     {
-                        if (pages === 1) return (<></>);
-                        return (<div className={"flex w-full justify-center"}>
-                            <Pagination
-                                isCompact
-                                showControls
-                                showShadow
-                                color={"primary"}
-                                total={pages}
-                                page={page}
-                                onChange={(page) => setPage(page)}
-                            />
-                        </div>);
+                        let pagination = (<></>);
+                        if (pages >= 1)
+                            pagination = (
+                                <Pagination
+                                    isCompact
+                                    showControls
+                                    showShadow
+                                    color={"primary"}
+                                    total={pages}
+                                    page={page}
+                                    onChange={(page) => setPage(page)}
+                                />
+                            );
+
+                        let actions = (<></>);
+
+                        if (selectedIds.length > 0)
+                        {
+                            actions = (
+                                <div className={"flex flex-row gap-3"}>
+                                    <Badge content={selectedIds.length}>
+                                        <Tooltip content={`Delete ${selectedIds.length} records`}>
+                                            <Button
+                                                color={"danger"}
+                                                className={"w-[2.5rem] h-[2.5rem] min-w-[2.5rem] min-h-[2.5rem]"}
+                                                onClick={async () =>
+                                                {
+                                                    setShouldDeleteSelected(true);
+                                                }}
+                                            >
+                                                <FontAwesomeIcon icon={faTrash}/>
+                                            </Button>
+                                        </Tooltip>
+                                    </Badge>
+                                </div>
+                            );
+                        }
+
+
+                        return (
+                            <div className={"flex w-full justify-center gap-4"}>
+                                {pagination}
+                                {actions}
+                            </div>
+                        );
                     })()
                 }
             >
