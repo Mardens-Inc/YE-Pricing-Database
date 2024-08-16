@@ -3,8 +3,9 @@ import {useEffect, useState} from "react";
 import {Employee, useEmployeeList} from "../ts/useEmployeeList.ts";
 import {useInfiniteScroll} from "@nextui-org/use-infinite-scroll";
 
-export default function EmployeesAutocomplete({onSelectionChange, error}: { onSelectionChange: (item: Employee | null) => void, error: string })
+export default function EmployeesAutocomplete({onSelectionChange, error, label, description, placeholder, isRequired, className}: { onSelectionChange?: (item: Employee | null) => void, error?: string, label?: string, description?: string, placeholder?: string, isRequired?: boolean, className?: string })
 {
+    error ??= "";
     const [isOpen, setOpen] = useState(false);
     const [search, setSearch] = useState<string | undefined>(undefined);
     const {items, hasMore, loading, onLoadMore} = useEmployeeList(search);
@@ -24,16 +25,23 @@ export default function EmployeesAutocomplete({onSelectionChange, error}: { onSe
     return (
         <Autocomplete
             id={"employee-autocomplete"}
-            label={"Employee"}
-            description={"Select your employee ID or username."}
-            placeholder={"Search for an employee..."}
-            isRequired
+            label={label ?? "Employee"}
+            description={description ?? "Select your employee ID or username."}
+            placeholder={placeholder ?? "Search for an employee..."}
+            isRequired={isRequired}
             defaultItems={items}
             scrollRef={scrollerRef}
             isLoading={loading}
             onOpenChange={setOpen}
             isInvalid={errorMessage !== ""}
             errorMessage={errorMessage}
+            className={className}
+            clearButtonProps={{
+                onClick: () =>
+                {
+                    if (onSelectionChange) onSelectionChange(null);
+                }
+            }}
             onValueChange={value =>
             {
                 if (value !== search)
@@ -43,7 +51,8 @@ export default function EmployeesAutocomplete({onSelectionChange, error}: { onSe
             {
                 fetch(`https://employees.mardens.com/api/${item}`).then(response => response.json()).then(data =>
                 {
-                    onSelectionChange(data as Employee | null);
+                    if (onSelectionChange)
+                        onSelectionChange(data as Employee | null);
                 });
             }}
             scrollShadowProps={{
