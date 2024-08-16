@@ -32,7 +32,6 @@ export default function Navigation({employee}: { employee: Employee | null })
             try
             {
                 setIsAdmin(auth.getUserProfile().admin);
-                console.log(auth.getUserProfile());
             } catch
             {
                 setIsAdmin(false);
