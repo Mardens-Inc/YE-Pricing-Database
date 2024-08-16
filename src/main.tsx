@@ -12,7 +12,7 @@ import StoresPage from "./assets/pages/StoresPage.tsx";
 import Stores from "./assets/ts/stores.ts";
 import DepartmentsPage from "./assets/pages/DepartmentsPage.tsx";
 import ProcessingPage from "./assets/pages/ProcessingPage.tsx";
-import {Employee} from "./assets/ts/useEmployeeList.ts";
+import {cacheEmployees, Employee} from "./assets/ts/useEmployeeList.ts";
 import FullListPage from "./assets/pages/FullListPage.tsx";
 
 applyTheme();
@@ -28,6 +28,7 @@ ReactDOM.createRoot($("#root")[0]!).render(
 
 function PageContent()
 {
+    cacheEmployees();
     const navigate = useNavigate();
     if (!Stores.hasStores())
         Stores.init();
