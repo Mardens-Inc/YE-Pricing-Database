@@ -8,12 +8,27 @@ export interface Employee
     location: string
 }
 
-export function getCurrentEmployee(): Employee | null{
+export function getCurrentEmployee(): Employee | null
+{
     const employee = window.localStorage.getItem("employee");
-    if(employee){
+    if (employee)
+    {
         return JSON.parse(employee);
     }
     return null;
+}
+
+export function cacheEmployees()
+{
+    if (document.cookie.includes("employees_fetched")) return;
+    fetch(`https://employees.mardens.com/api/`).then(response => response.json()).then(data =>
+    {
+        localStorage.setItem("employees", JSON.stringify(data));
+        document.cookie = "employees_fetched=true";
+    });
+}
+export function getEmployees(): Employee[]{
+    return JSON.parse(localStorage.getItem("employees") as string);
 }
 
 export function useEmployeeList(search?: string)
@@ -46,6 +61,11 @@ export function useEmployeeList(search?: string)
                 setHasMore(false);
                 setLoading(false);
             });
+
+            const employees = getEmployees();
+            const filteredEmployees = employees.filter(employee => employee.first_name.toLowerCase().includes(search.toLowerCase()) || employee.last_name.toLowerCase().includes(search.toLowerCase()));
+            setItems(filteredEmployees);
+
         }
 
     }, [search]);
