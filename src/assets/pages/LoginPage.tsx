@@ -142,6 +142,7 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
             />
             <EmployeesAutocomplete
                 error={employeeError}
+                isRequired={true}
                 onSelectionChange={item =>
                 {
                     setEmployeeError("");
