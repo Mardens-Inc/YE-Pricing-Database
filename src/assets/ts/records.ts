@@ -99,6 +99,11 @@ export default class Records
         return $.ajax(`https://yeinv.mardens.com/api/?id=${id}`, {method: "DELETE"});
     }
 
+    public static async truncate(): Promise<void>
+    {
+        await $.ajax("https://yeinv.mardens.com/api/truncate", {method: "DELETE"});
+    }
+
 
 }
 
