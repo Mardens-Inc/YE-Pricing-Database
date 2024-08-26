@@ -113,6 +113,15 @@ pub async fn delete(config: Data<DatabaseConfig>, query: web::Query<UpdateQuery>
 	}
 }
 
+#[delete("/truncate")]
+pub async fn truncate(config: Data<DatabaseConfig>) -> HttpResponse {
+	// Handle data access call and possible errors
+	match db_access::truncate(config) {
+		Ok(_) => HttpResponse::Ok().finish(), // Return a 200 OK response on success
+		Err(e) => HttpResponse::InternalServerError().json(json!({"error": e})), // Return errors as a JSON response
+	}
+}
+
 #[get("/export")]
 pub async fn export(config: Data<DatabaseConfig>) -> impl Responder {
 	match db_access::export(config).await {

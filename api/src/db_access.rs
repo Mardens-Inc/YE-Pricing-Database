@@ -120,8 +120,6 @@ pub fn range(
 	let mut count = -1;
 	let mut total: i32 = -1;
 
-	println!("cmd: {}", cmd);
-
 	// Execute our SQL command and populate the DBResult with a list of DatabaseRowEntry objects.
 	let result =
 		match connection.exec_map(cmd.as_str(), &args, |row: mysql::Row| -> DatabaseRowEntry {
@@ -545,4 +543,19 @@ pub async fn export(config: Data<DatabaseConfig>) -> Result<String, String> {
 	}
 
 	Ok(String::from_utf8(csv_writer.into_inner().unwrap()).unwrap())
+}
+
+pub fn truncate(config: Data<DatabaseConfig>) -> Result<(), String>
+{
+	let mut connection = match get_connection(config) {
+		Ok(c) => c,
+		Err(e) => {
+			return Err(format!("Failed to establish connection to the database: {}", e));
+		}
+	};
+
+	match connection.exec_drop("TRUNCATE TABLE `years-end-inventory`", ()) {
+		Ok(_) => Ok(()),
+		Err(e) => Err(format!("Failed to truncate table: {}", e))
+	}
 }
