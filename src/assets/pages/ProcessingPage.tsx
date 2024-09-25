@@ -7,6 +7,7 @@ import {useState} from "react";
 import $ from "jquery";
 import Records, {Record} from "../ts/records.ts";
 import {all_departments} from "./DepartmentsPage.tsx";
+import sound from "../audio/notification-sound.mp3";
 
 export default function ProcessingPage()
 {
@@ -15,9 +16,9 @@ export default function ProcessingPage()
     // form data
     const [tagNumber, setTagNumber] = useState("");
     const [description, setDescription] = useState("");
-    const [percent, setPercent] = useState<string>("");
+    const [percent, setPercent] = useState<string>("0");
     const [mardensPrice, setMardensPrice] = useState("");
-    const [quantity, setQuantity] = useState("");
+    const [quantity, setQuantity] = useState("1");
 
     // form data missing required field state
     const [tagNumberError, setTagNumberError] = useState("");
@@ -53,7 +54,10 @@ export default function ProcessingPage()
 
     const onAdd = async () =>
     {
+
         if (isAdding) return;
+
+
         // handle empty fields
         if (tagNumber === "" || mardensPrice === "" || quantity === "")
         {
@@ -69,6 +73,13 @@ export default function ProcessingPage()
             {
                 setQuantityError("Quantity is required.");
             }
+            const missing_required = $("input[aria-required='true']").filter((_, el) => ((el as HTMLInputElement).value === ""));
+            if (missing_required.length !== 0)
+            {
+                $(missing_required[0]).trigger("focus");
+                return;
+            }
+
             return;
         }
 
@@ -79,9 +90,6 @@ export default function ProcessingPage()
 
 
         setIsAdding(true);
-
-        // TODO: Submit to API
-        // ...
 
         const record: Record = {
             tag_number: parseInt(tagNumber),
@@ -96,13 +104,14 @@ export default function ProcessingPage()
 
         await Records.add(record);
 
+
+        await ($("#notification-sound")[0] as HTMLAudioElement).play();
+
         // setPercent(0);
         setMardensPrice("");
-        setQuantity("");
-        $("#form-restart-input").trigger("focus");
         setIsAdding(false);
         setIsRefreshing(prevState => !prevState);
-        $("#mardens-price-input").trigger("focus");
+        $("#quantity-input").trigger("focus");
     };
 
     $("#record-data-form input")
@@ -117,6 +126,7 @@ export default function ProcessingPage()
 
     return (
         <>
+            <audio id={"notification-sound"} src={sound}/>
             <div className={"flex flex-row items-end"}>
                 <h1 className={"text-2xl ml-9 mb-4 sm:text-4xl md:text-5xl lg:text-7xl capitalize"}>{departmentName}</h1>
                 <h2 className={"text-2xl ml-9 mb-4 sm:text-3xl md:text-4xl lg:text-6xl opacity-70 italic"}>{store.name}</h2>
@@ -131,6 +141,10 @@ export default function ProcessingPage()
                         onValueChange={
                             (value) =>
                             {
+                                value = value.replace(/[^0-9]/g, "");
+                                let num = parseInt(value);
+                                if (isNaN(num)) num = 0;
+                                if (num < 0) value = "0";
                                 setTagNumber(value);
                                 setTagNumberError("");
                             }
@@ -155,6 +169,26 @@ export default function ProcessingPage()
                     <div className={"flex flex-row gap-3"}>
                         <Input
                             tabIndex={3}
+                            label={"Quantity"}
+                            id={"quantity-input"}
+                            className={"w-[25%]"}
+                            value={quantity}
+                            onValueChange={
+                                (value) =>
+                                {
+                                    value = value.replace(/[^0-9]/g, "");
+                                    let num = parseInt(value);
+                                    if (isNaN(num)) num = 0;
+                                    if (num < 0) value = "0";
+                                    setQuantity(value);
+                                    setQuantityError("");
+                                }
+                            }
+                            isRequired
+                            isInvalid={quantityError !== ""}
+                            errorMessage={quantityError}/>
+                        <Input
+                            tabIndex={4}
                             id={"mardens-price-input"}
                             label={"Mardens Price or Tag Price"}
                             value={mardensPrice}
@@ -172,25 +206,6 @@ export default function ProcessingPage()
                             isRequired
                             isInvalid={mardensPriceError !== ""}
                             errorMessage={mardensPriceError}/>
-                        <Input
-                            tabIndex={4}
-                            label={"Quantity"}
-                            className={"w-[25%]"}
-                            value={quantity}
-                            onValueChange={
-                                (value) =>
-                                {
-                                    value = value.replace(/[^0-9]/g, "");
-                                    let num = parseInt(value);
-                                    if (isNaN(num)) num = 0;
-                                    if (num < 0) value = "0";
-                                    setQuantity(value);
-                                    setQuantityError("");
-                                }
-                            }
-                            isRequired
-                            isInvalid={quantityError !== ""}
-                            errorMessage={quantityError}/>
                     </div>
                     <Input
                         tabIndex={5}
@@ -201,7 +216,7 @@ export default function ProcessingPage()
                             if (e.key === "Tab")
                             {
                                 e.preventDefault();
-                                $("#mardens-price-input").trigger("focus");
+                                $("#quantity-input").trigger("focus");
                             }
                         }}
                         onValueChange={
