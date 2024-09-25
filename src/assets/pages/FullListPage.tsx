@@ -130,6 +130,13 @@ export default function FullListPage()
                     <Button
                         // color={"primary"}
                         className={"w-[3.5rem] h-[3.5rem] min-w-[3.5rem] min-h-[3.5rem]"}
+                        onClick={() =>
+                        {
+                            const link = document.createElement("a");
+                            link.href = "https://yeinv.mardens.com/api/export";
+                            link.click();
+                            console.log("Exporting database");
+                        }}
                     >
                         <FontAwesomeIcon icon={faFloppyDisk}/>
                     </Button>
