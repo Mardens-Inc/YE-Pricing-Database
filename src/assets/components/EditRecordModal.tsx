@@ -89,9 +89,9 @@ export default function EditRecordModal(props: EditRecordModalProps)
                                     </Autocomplete>
                                     <Input
                                         label={"Percent"}
-                                        value={(record.percent * 100).toFixed(2)}
+                                        value={record.percent.toString()}
                                         type={"number"}
-                                        onChange={(e) => setRecord({...record, percent: parseFloat(e.target.value) / 100})}
+                                        onChange={(e) => setRecord({...record, percent: parseFloat(e.target.value)})}
                                     />
                                     <Input
                                         label={"Mardens Price or Tag Price"}
