@@ -8,12 +8,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da937078-773c-4d29-90a6-e2b28736ed47" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../src/assets/audio/notification-sound.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/db_access.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/db_access.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/httaccess.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/httaccess.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/assets/components/Navigation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/components/Navigation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/assets/ts/records.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/ts/records.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/assets/components/EditRecordModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/components/EditRecordModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/assets/pages/FullListPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/pages/FullListPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/assets/pages/ProcessingPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/assets/pages/ProcessingPage.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +25,7 @@
       <option value="directory" />
     </option>
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="RsBuildProfile:dev" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -82,12 +83,15 @@
     "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Workspaces/Web/year-end-pricing-database/api/target/release",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "org.rust.cargo.project.model.PROJECT_DISCOVERY": "true",
     "org.rust.cargo.project.model.impl.CargoExternalSystemProjectAware.subscribe.first.balloon": "",
     "org.rust.first.attach.projects": "true",
-    "settings.editor.selected.configurable": "preferences.sourceCode.Rust"
+    "settings.editor.selected.configurable": "preferences.sourceCode.Rust",
+    "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -204,7 +208,8 @@
       <workItem from="1723477430546" duration="2619000" />
       <workItem from="1724250006640" duration="615000" />
       <workItem from="1724353916968" duration="4000" />
-      <workItem from="1724678132582" duration="869000" />
+      <workItem from="1724678132582" duration="1807000" />
+      <workItem from="1725375504888" duration="534000" />
     </task>
     <task id="LOCAL-00001" summary="Switch from .NET Core to Rust with Actix-web&#10;&#10;Replaced the existing .NET Core project with a Rust-based Actix-web project. Deleted .NET configuration and controller files, and added initial Actix-web server setup. Updated the `.gitignore` and included the new `Cargo.lock` file.">
       <option name="closed" value="true" />
