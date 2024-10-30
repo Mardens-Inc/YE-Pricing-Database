@@ -51,8 +51,9 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
             {
                 fetch(`https://employees.mardens.com/api/${item}`).then(response => response.json()).then(data =>
                 {
-                    if (onSelectionChange)
+                    if (onSelectionChange){
                         onSelectionChange(data as Employee | null);
+                    }
                 });
             }}
             scrollShadowProps={{
@@ -65,7 +66,7 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
                 const name = `${emp.first_name} ${emp.last_name}`;
                 return (
                     <AutocompleteItem
-                        key={emp.employee_id}
+                        key={emp.id}
                         textValue={`${emp.first_name} ${emp.last_name}`}
                         className={"flex flex-row capitalize"}
                     >
