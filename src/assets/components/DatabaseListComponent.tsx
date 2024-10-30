@@ -62,7 +62,7 @@ export default function DatabaseListComponent(props: DatabaseListProps)
         console.log(props);
         Records.search({
             query: props.query,
-            employee: props.employee?.employee_id,
+            employee: props.employee?.id,
             page,
             store: props.store ? Stores.getStores().filter(store => store.name.toLowerCase() === props.store!.toLowerCase())[0].id : undefined,
             department: props.department ? all_departments.findIndex(department => department.name.toLowerCase() === props.department!.toLowerCase()) : undefined,
