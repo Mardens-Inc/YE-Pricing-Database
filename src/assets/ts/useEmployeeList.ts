@@ -23,7 +23,7 @@ export function cacheEmployees()
     if (document.cookie.includes("employees_fetched")) return;
     fetch(`https://employees.mardens.com/api/`).then(response => response.json()).then(data =>
     {
-        localStorage.setItem("employees", JSON.stringify(data));
+        localStorage.setItem("employees", JSON.stringify(data.employees));
         document.cookie = "employees_fetched=true";
     });
 }
