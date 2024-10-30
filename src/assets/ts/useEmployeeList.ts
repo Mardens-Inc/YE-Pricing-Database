@@ -20,7 +20,7 @@ export function getCurrentEmployee(): Employee | null
 
 export function cacheEmployees()
 {
-    if (document.cookie.includes("employees_fetched")) return;
+    if (document.cookie.includes("employees_fetched=true")) return;
     fetch(`https://employees.mardens.com/api/`).then(response => response.json()).then(data =>
     {
         localStorage.setItem("employees", JSON.stringify(data.employees));
@@ -30,7 +30,22 @@ export function cacheEmployees()
 
 export function getEmployees(): Employee[]
 {
-    return JSON.parse(localStorage.getItem("employees") as string);
+    try
+    {
+
+        const employees = JSON.parse(<string>localStorage.getItem("employees")) as Employee[] | null;
+        if (!employees)
+        {
+            throw new Error("No employees found in local storage");
+        }
+        return employees;
+    } catch (e)
+    {
+        document.cookie = "employees_fetched=false";
+        cacheEmployees();
+        window.location.reload();
+        return [];
+    }
 }
 
 export function useEmployeeList(search?: string)
