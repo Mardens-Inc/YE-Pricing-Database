@@ -390,7 +390,7 @@ pub async fn export(config: Data<DatabaseConfig>) -> Result<String, String> {
 			Err(e) => return Err(e.to_string()),
 		};
 	let employees: HashMap<i32, Employee> = match client
-		.get("https://employees.mardens.com/api/")
+		.get("https://employees.mardens.com/api/all")
 		.send()
 		.await
 	{
@@ -401,7 +401,7 @@ pub async fn export(config: Data<DatabaseConfig>) -> Result<String, String> {
 					Ok(e) => e,
 					Err(e) => return Err(e.to_string()),
 				};
-			employees.into_iter().map(|e| (e.employee_id, e)).collect()
+			employees.into_iter().map(|e| (e.id, e)).collect()
 		},
 		Err(e) => return Err(e.to_string()),
 	};
