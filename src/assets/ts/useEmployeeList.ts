@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 
 export interface Employee
 {
-    employee_id: number,
+    id: number,
     first_name: string
     last_name: string,
     location: string
@@ -27,7 +27,9 @@ export function cacheEmployees()
         document.cookie = "employees_fetched=true";
     });
 }
-export function getEmployees(): Employee[]{
+
+export function getEmployees(): Employee[]
+{
     return JSON.parse(localStorage.getItem("employees") as string);
 }
 
@@ -57,6 +59,7 @@ export function useEmployeeList(search?: string)
         {
             fetch(`https://employees.mardens.com/api/search?q=${search}&limit=10`).then(response => response.json()).then(data =>
             {
+                console.log(data);
                 setItems(data);
                 setHasMore(false);
                 setLoading(false);
