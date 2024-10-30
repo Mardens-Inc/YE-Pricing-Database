@@ -2,7 +2,7 @@ import {DatabaseRow} from "../components/DatabaseListComponent.tsx";
 import Stores from "./stores.ts";
 import {all_departments} from "../pages/DepartmentsPage.tsx";
 import $ from "jquery";
-import {getCurrentEmployee, getEmployees} from "./useEmployeeList.ts";
+import {Employee, getCurrentEmployee, getEmployees} from "./useEmployeeList.ts";
 
 export interface Record
 {
@@ -143,7 +143,7 @@ export async function databaseRowToRecord(row: DatabaseRow): Promise<Record>
 {
     const matchedStore = Stores.getStores().find(i => i.name === row.store);
     const matchedDepartment = all_departments.find(i => i.name === row.department);
-    const employee = getCurrentEmployee()?.id === row.employee.id ? getCurrentEmployee() : await $.get(`https://employees.mardens.com/api/${row.employee.id}`);
+    const employee:Employee = getCurrentEmployee()?.id === row.employee.id ? getCurrentEmployee() : await $.get(`https://employees.mardens.com/api/${row.employee.id}`);
 
     if (!employee)
     {
@@ -164,7 +164,7 @@ export async function databaseRowToRecord(row: DatabaseRow): Promise<Record>
         ...row,
         store: matchedStore?.id,
         department: all_departments.findIndex(i => i.name === row.department),
-        employee: employee.employee_id,
+        employee: employee.id,
         created_at: new Date(row.created_at),
         updated_at: new Date(row.updated_at)
     };
