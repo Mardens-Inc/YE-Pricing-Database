@@ -98,7 +98,7 @@ export default function ProcessingPage()
             percent: Number(percent),
             mardens_price: parseFloat(mardensPrice),
             quantity: parseInt(quantity),
-            employee: (JSON.parse(window.localStorage.getItem("employee")!) as Employee).employee_id,
+            employee: (JSON.parse(window.localStorage.getItem("employee")!) as Employee).id,
             description
         };
 
@@ -108,10 +108,11 @@ export default function ProcessingPage()
         await ($("#notification-sound")[0] as HTMLAudioElement).play();
 
         // setPercent(0);
+        setQuantity("1");
         setMardensPrice("");
         setIsAdding(false);
         setIsRefreshing(prevState => !prevState);
-        $("#quantity-input").trigger("focus");
+        setTimeout(() => $("#quantity-input").trigger("focus").trigger("select"), 100);
     };
 
     $("#record-data-form input")
@@ -178,12 +179,22 @@ export default function ProcessingPage()
                                 {
                                     value = value.replace(/[^0-9]/g, "");
                                     let num = parseInt(value);
-                                    if (isNaN(num)) num = 0;
-                                    if (num < 0) value = "0";
+                                    if (isNaN(num)) num = 1;
+                                    if (num < 1) value = "1";
                                     setQuantity(value);
                                     setQuantityError("");
                                 }
                             }
+                            onFocusChange={(focused) =>
+                            {
+                                if (!focused)
+                                {
+                                    if (quantity === "")
+                                    {
+                                        setQuantity("1");
+                                    }
+                                }
+                            }}
                             isRequired
                             isInvalid={quantityError !== ""}
                             errorMessage={quantityError}/>
