@@ -111,7 +111,7 @@ export async function recordToDatabaseRow(record: Record): Promise<DatabaseRow>
 {
     const matchedStore = Stores.getStores().find(i => i.id === record.store);
     const matchedDepartment = all_departments.find((_, index) => index === record.department);
-    const employee = getCurrentEmployee()?.employee_id === record.employee ? getCurrentEmployee() : getEmployees().find(employee => employee.employee_id === record.employee);
+    const employee = getCurrentEmployee()?.id === record.employee ? getCurrentEmployee() : getEmployees().find(employee => employee.id === record.employee);
 
     if (!employee)
     {
@@ -143,7 +143,7 @@ export async function databaseRowToRecord(row: DatabaseRow): Promise<Record>
 {
     const matchedStore = Stores.getStores().find(i => i.name === row.store);
     const matchedDepartment = all_departments.find(i => i.name === row.department);
-    const employee = getCurrentEmployee()?.employee_id === row.employee.employee_id ? getCurrentEmployee() : await $.get(`https://employees.mardens.com/api/${row.employee.employee_id}`);
+    const employee = getCurrentEmployee()?.id === row.employee.id ? getCurrentEmployee() : await $.get(`https://employees.mardens.com/api/${row.employee.id}`);
 
     if (!employee)
     {
