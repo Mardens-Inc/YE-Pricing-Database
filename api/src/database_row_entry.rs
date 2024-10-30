@@ -51,7 +51,7 @@ pub struct DBResult {
 
 #[derive(Serialize, Deserialize)]
 pub struct Employee {
-    pub employee_id: i32,
+    pub id: i32,
     pub first_name: String,
     pub last_name: String,
     pub location: String,
