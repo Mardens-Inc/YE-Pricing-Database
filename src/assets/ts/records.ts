@@ -113,18 +113,15 @@ export async function recordToDatabaseRow(record: Record): Promise<DatabaseRow>
     const matchedDepartment = all_departments.find((_, index) => index === record.department);
     const employee = getCurrentEmployee()?.id === record.employee ? getCurrentEmployee() : getEmployees().find(employee => employee.id === record.employee);
 
-    if (!employee)
-    {
-        throw new Error("Employee not found");
-    }
-
     if (!matchedStore)
     {
+        alert(`Store Id not found: ${record.store}`);
         throw new Error("Store not found");
     }
 
     if (!matchedDepartment)
     {
+        alert(`Department Id not found: ${record.department}`);
         throw new Error("Department not found");
     }
 
@@ -133,7 +130,7 @@ export async function recordToDatabaseRow(record: Record): Promise<DatabaseRow>
         id: record.id ?? 0,
         store: matchedStore?.name,
         department: matchedDepartment?.name,
-        employee,
+        employee: employee || {id: -1, first_name: record.employee.toString(), last_name: "", location: ""} as Employee,
         created_at: record.created_at?.toString() ?? "",
         updated_at: record.updated_at?.toString() ?? ""
     };
@@ -147,16 +144,19 @@ export async function databaseRowToRecord(row: DatabaseRow): Promise<Record>
 
     if (!employee)
     {
+        alert(`Employee not found: ${row.employee.id}`);
         throw new Error("Employee not found");
     }
 
     if (!matchedStore)
     {
+        alert(`Store not found: ${row.store}`);
         throw new Error("Store not found");
     }
 
     if (!matchedDepartment)
     {
+        alert(`Department not found: ${row.department}`);
         throw new Error("Department not found");
     }
 
