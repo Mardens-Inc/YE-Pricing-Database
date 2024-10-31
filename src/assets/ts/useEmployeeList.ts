@@ -21,9 +21,9 @@ export function getCurrentEmployee(): Employee | null
 export function cacheEmployees()
 {
     if (document.cookie.includes("employees_fetched=true")) return;
-    fetch(`https://employees.mardens.com/api/`).then(response => response.json()).then(data =>
+    fetch(`https://employees.mardens.com/api/all`).then(response => response.json()).then(data =>
     {
-        localStorage.setItem("employees", JSON.stringify(data.employees));
+        localStorage.setItem("employees", JSON.stringify(data));
         document.cookie = "employees_fetched=true";
     });
 }
