@@ -59,7 +59,6 @@ export default function DatabaseListComponent(props: DatabaseListProps)
 
         abortControllerRef.current = new AbortController();
 
-        console.log(props);
         Records.search({
             query: props.query,
             employee: props.employee?.id,
@@ -70,18 +69,26 @@ export default function DatabaseListComponent(props: DatabaseListProps)
             abortSignal: abortControllerRef.current.signal
         }).then(async result =>
         {
+            console.log(`Updating items to page ${page}: `, result.data);
             setItems(await Promise.all(result.data.map(record => recordToDatabaseRow(record))));
             setPages(result.last_page);
             abortControllerRef.current = null; // Resetting abortController after the request completes
-        }).catch(() =>
+        }).catch((e) =>
         {
+            console.error("Error fetching records: ", e);
             abortControllerRef.current = null; // Resetting abortController if the request is aborted or failed
         });
     };
     useEffect(() =>
     {
         refresh();
+        console.log("Page is ", page);
     }, [page, props.isRefreshing]);
+
+    useEffect(() =>
+    {
+        console.log("Items changed to ", items);
+    }, [items]);
 
 
     return (
@@ -245,8 +252,9 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                 }
             >
                 <TableHeader>
-                    <TableColumn key={"store"} className={"max-w-8"}>Store</TableColumn>
-                    <TableColumn key={"department"} className={"max-w-8"}>Department</TableColumn>
+                    <TableColumn key={"tag_number"}>Tag#</TableColumn>
+                    <TableColumn key={"store"}>Store</TableColumn>
+                    <TableColumn key={"department"}>Department</TableColumn>
                     <TableColumn key={"description"}>Description</TableColumn>
                     <TableColumn key={"percent"}>Percent</TableColumn>
                     <TableColumn key={"mardens_price"}>Mardens Price</TableColumn>
