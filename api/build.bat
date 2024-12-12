@@ -1,0 +1,1 @@
+pwp -j 192.168.21.209 -u administrator -a C:\Users\drew.chase\.ssh\mss-sshkey_ossh.key -s yeinv --binary years_end_pricing_database_api --build-command "wsl cargo build --release" --build
