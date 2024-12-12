@@ -1,5 +1,5 @@
-import React from "react";
-import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+import React, {useEffect} from "react";
+import {BrowserRouter, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import $ from "jquery";
 import {NextUIProvider} from "@nextui-org/react";
@@ -33,6 +33,13 @@ function PageContent()
     if (!Stores.hasStores())
         Stores.init();
     const [employee, setEmployee] = React.useState<Employee | null>(window.localStorage.getItem("employee") !== undefined ? JSON.parse(window.localStorage.getItem("employee")!) as Employee : null);
+
+
+    const {pathname} = useLocation();
+    useEffect(() =>
+    {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     return (
         <NextUIProvider navigate={navigate}>
