@@ -22,8 +22,35 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
         setErrorMessage(error);
     }, [error]);
 
+    const handleSelectionChange = async (item: string | null) =>
+    {
+        if (!item) return;
+        try
+        {
+            const response = await fetch(`https://employees.mardens.com/api/${item}`);
+            if (!response.ok)
+            {
+                throw new Error(`Failed to fetch employee details (status: ${response.status})`);
+            }
+            const data = await response.json();
+            if (onSelectionChange)
+            {
+                onSelectionChange(data as Employee | null);
+            }
+        } catch (e)
+        {
+            const errMessage = e instanceof Error ? e.message : "Unknown error occurred.";
+            setErrorMessage(errMessage);
+            if (onSelectionChange)
+            {
+                onSelectionChange(null);
+            }
+        }
+    };
+
     return (
         <Autocomplete
+            key={"employee-autocomplete"}
             id={"employee-autocomplete"}
             label={label ?? "Employee"}
             description={description ?? "Select your employee ID or username."}
@@ -47,15 +74,7 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
                 if (value !== search)
                     setSearch(value);
             }}
-            onSelectionChange={item =>
-            {
-                fetch(`https://employees.mardens.com/api/${item}`).then(response => response.json()).then(data =>
-                {
-                    if (onSelectionChange){
-                        onSelectionChange(data as Employee | null);
-                    }
-                });
-            }}
+            onSelectionChange={(key) => handleSelectionChange(key as string | null)}
             scrollShadowProps={{
                 isEnabled: false
             }}
@@ -63,23 +82,29 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
 
             {(emp) =>
             {
-                const name = `${emp.first_name} ${emp.last_name}`;
-                return (
-                    <AutocompleteItem
-                        key={emp.id}
-                        textValue={`${emp.first_name} ${emp.last_name}`}
-                        className={"flex flex-row capitalize"}
-                    >
-                        <div className={"flex flex-row"}>
-                            <Avatar alt={name} className="flex-shrink-0 mr-4" size="sm" src={""}/>
-                            <div className="flex flex-col">
-                                <span className="text-small capitalize">{name.toLowerCase()}</span>
-                                <span className="text-tiny text-default-400">{emp.location}</span>
-                            </div>
-                        </div>
-                    </AutocompleteItem>
-                );
+                try
+                {
 
+                    const name = `${emp.first_name ?? "unknown"} ${emp.last_name ?? "unknown"}`;
+                    return (
+                        <AutocompleteItem
+                            key={emp.id ?? "unknown"}
+                            textValue={`${emp.first_name ?? "unknown"} ${emp.last_name ?? "unknown"}`}
+                            className={"flex flex-row capitalize"}
+                        >
+                            <div className={"flex flex-row"}>
+                                <Avatar alt={name} className="flex-shrink-0 mr-4" size="sm" src={""}/>
+                                <div className="flex flex-col">
+                                    <span className="text-small capitalize">{name?.toLowerCase()}</span>
+                                    <span className="text-tiny text-default-400">{emp.location ?? "unknown"}</span>
+                                </div>
+                            </div>
+                        </AutocompleteItem>
+                    );
+                } catch
+                {
+                    return (<></>);
+                }
             }}
 
         </Autocomplete>);
