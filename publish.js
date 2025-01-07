@@ -30,10 +30,15 @@ try {
     for (const include of includePaths) {
         const [path, remotePath] = include.split(":")
         const isDirectory = lstatSync(path).isDirectory();
+
         if (isDirectory) {
             try {
-                if (remotePath !== "/")
+                // Always delete the assets directory before uploading
+                if (remotePath === "/") {
+                    await client.removeDir(`${remotePath}assets`)
+                } else {
                     await client.removeDir(remotePath)
+                }
             } catch (err) {
                 console.error(err)
             }
