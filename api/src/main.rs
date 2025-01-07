@@ -1,7 +1,8 @@
 use actix_web::http::header;
-use actix_web::{dev::Service as _, web, App, HttpServer};
+use actix_web::{dev::Service as _, get, web, App, HttpServer};
 
 use httaccess::{delete, insert, range, update, export, truncate};
+use crate::httaccess::ping;
 
 mod database_config;
 mod database_row_entry;
@@ -27,6 +28,7 @@ async fn main() -> std::io::Result<()> {
 				}
 			})
 			.app_data(web::Data::new(config.clone()))
+			.service(ping)
 			.service(range)
 			.service(insert)
 			.service(update)
@@ -38,6 +40,8 @@ async fn main() -> std::io::Result<()> {
 		.run()
 		.await
 }
+
+
 
 /// Asynchronously retrieves the database configuration by making a GET request to the specified URL.
 ///

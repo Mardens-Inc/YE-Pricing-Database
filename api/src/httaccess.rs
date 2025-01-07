@@ -137,3 +137,9 @@ pub async fn export(config: Data<DatabaseConfig>) -> impl Responder {
 struct UpdateQuery {
 	id: i32,
 }
+
+
+#[get("ping")]
+pub async fn ping()->impl Responder{
+	HttpResponse::Ok().finish()
+}
