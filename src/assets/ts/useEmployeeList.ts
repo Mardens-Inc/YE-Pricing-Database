@@ -40,7 +40,7 @@ export function cacheEmployees()
         .then(data =>
         {
             localStorage.setItem("employees", JSON.stringify(data));
-            document.cookie = "employees_fetched=true";
+            document.cookie = "employees_fetched=true; path=/; SameSite=Strict;";
         })
         .catch(error =>
         {
