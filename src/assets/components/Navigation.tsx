@@ -90,6 +90,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                 {
                                     (window.localStorage.getItem("store") && window.localStorage.getItem("department")) as any &&
                                     <DropdownItem
+                                        key="goto-processing"
                                         closeOnSelect={true}
                                         description={`Currently processing ${window.localStorage.getItem("department") ?? "not set"} in ${window.localStorage.getItem("store") ?? "not set"}`}
                                         onClick={() => navigate(`/stores/${window.localStorage.getItem("store")}/${window.localStorage.getItem("department")}`)}
@@ -101,6 +102,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                     window.localStorage.getItem("store") as any &&
 
                                     <DropdownItem
+                                        key="change-department"
                                         closeOnSelect={true}
                                         hidden={window.localStorage.getItem("store") !== undefined}
                                         description={`Current department is ${window.localStorage.getItem("department") ?? "not set"}`}
@@ -110,18 +112,20 @@ export default function Navigation({employee}: { employee: Employee | null })
                                     </DropdownItem>
                                 }
                                 <DropdownItem
+                                    key="change-store"
                                     closeOnSelect={true}
                                     description={`Current store is ${window.localStorage.getItem("store") ?? "not set"}`}
                                     onClick={() => navigate("/stores/")}
                                 >
                                     Change Store
                                 </DropdownItem>
-                                <DropdownItem closeOnSelect={false}>
+                                <DropdownItem key="theme-switcher" closeOnSelect={false}>
                                     <ThemeSwitcher/>
                                 </DropdownItem>
                                 {isAdmin &&
-                                    <DropdownSection title={"Admin zone"}>
+                                    <DropdownSection key="admin-zone" title={"Admin zone"}>
                                         <DropdownItem
+                                            key="view-list"
                                             closeOnSelect={true}
                                             description={"View the full list of items."}
                                             onClick={() => navigate("/list")}
@@ -129,6 +133,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                             View Full List
                                         </DropdownItem>
                                         <DropdownItem
+                                            key="export-list"
                                             closeOnSelect={true}
                                             description={"Export the full list of items to a CSV file."}
                                             onClick={() =>
@@ -144,9 +149,10 @@ export default function Navigation({employee}: { employee: Employee | null })
                                     </DropdownSection>
                                 }
 
-                                <DropdownSection title={"Danger zone"}>
+                                <DropdownSection key="danger-zone" title={"Danger zone"}>
                                     {isAdmin &&
                                         (<DropdownItem
+                                            key="truncate"
                                             color={"danger"}
                                             className="text-danger"
                                             closeOnSelect={true}
@@ -157,6 +163,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                         </DropdownItem>) as any
                                     }
                                     <DropdownItem
+                                        key="logout"
                                         color={"danger"}
                                         className="text-danger"
                                         closeOnSelect={true}
