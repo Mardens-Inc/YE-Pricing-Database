@@ -142,7 +142,7 @@ export default function FullListPage()
                     </Button>
                 </Tooltip>
             </div>
-            <DatabaseListComponent isRefreshing={isRefreshing} limit={10} query={search} store={store?.name} department={department?.name} employee={employee}/>
+            <DatabaseListComponent isRefreshing={isRefreshing} limit={100} query={search} store={store?.name} department={department?.name} employee={employee}/>
         </div>
     );
 }
