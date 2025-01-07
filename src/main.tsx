@@ -14,13 +14,16 @@ import DepartmentsPage from "./assets/pages/DepartmentsPage.tsx";
 import ProcessingPage from "./assets/pages/ProcessingPage.tsx";
 import {cacheEmployees, Employee} from "./assets/ts/useEmployeeList.ts";
 import FullListPage from "./assets/pages/FullListPage.tsx";
+import {AlertModalProvider, useAlertModal} from "./assets/providers/AlertModalProvider.tsx";
 
 applyTheme();
 
 ReactDOM.createRoot($("#root")[0]!).render(
     <React.StrictMode>
         <BrowserRouter>
-            <PageContent/>
+            <AlertModalProvider>
+                <PageContent/>
+            </AlertModalProvider>
         </BrowserRouter>
     </React.StrictMode>
 );
@@ -34,11 +37,28 @@ function PageContent()
         Stores.init();
     const [employee, setEmployee] = React.useState<Employee | null>(window.localStorage.getItem("employee") !== undefined ? JSON.parse(window.localStorage.getItem("employee")!) as Employee : null);
 
-
+    const {alert} = useAlertModal();
     const {pathname} = useLocation();
     useEffect(() =>
     {
         window.scrollTo(0, 0);
+
+        // ping the api
+        fetch("https://inv.mardens.com/api/ping")
+            .then(response =>
+            {
+                if (!response.ok)
+                    throw new Error("System is Offline");
+            })
+            .catch(() =>
+            {
+                alert({
+                    title: "System is Offline",
+                    message: "The year end inventory system is currently offline, if you believe this is a mistake please email helpdesk at helpdesk@mardens.com",
+                    type: "error",
+                    actions: undefined
+                });
+            });
     }, [pathname]);
 
     return (
