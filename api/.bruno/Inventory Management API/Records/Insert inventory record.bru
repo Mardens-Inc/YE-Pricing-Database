@@ -1,0 +1,19 @@
+meta {
+  name: Insert inventory record
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": "",
+    "name": "",
+    "quantity": ""
+  }
+}

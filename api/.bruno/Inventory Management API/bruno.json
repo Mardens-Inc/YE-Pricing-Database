@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Year End Inventory API",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
