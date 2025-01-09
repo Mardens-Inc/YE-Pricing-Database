@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 import {Employee} from "../ts/useEmployeeList.ts";
 import ConfirmModal from "./ConfirmModal.tsx";
 import Records from "../ts/records.ts";
+import {is_readonly, toggle_readonly} from "../ts/readonly.ts";
 
 export default function Navigation({employee}: { employee: Employee | null })
 {
@@ -16,6 +17,12 @@ export default function Navigation({employee}: { employee: Employee | null })
     const navigate = useNavigate();
     const [emp, setEmployee] = useState<Employee | null>(employee);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isReadonly, setIsReadonly] = useState(false);
+
+    useEffect(() =>
+    {
+        is_readonly().then(setIsReadonly);
+    }, []);
 
     const {onOpenChange, isOpen, onOpen} = useDisclosure();
 
@@ -93,7 +100,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                         key="goto-processing"
                                         closeOnSelect={true}
                                         description={`Currently processing ${window.localStorage.getItem("department") ?? "not set"} in ${window.localStorage.getItem("store") ?? "not set"}`}
-                                        onClick={() => navigate(`/stores/${window.localStorage.getItem("store")}/${window.localStorage.getItem("department")}`)}
+                                        onPress={() => navigate(`/stores/${window.localStorage.getItem("store")}/${window.localStorage.getItem("department")}`)}
                                     >
                                         Goto Processing
                                     </DropdownItem>
@@ -106,7 +113,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                         closeOnSelect={true}
                                         hidden={window.localStorage.getItem("store") !== undefined}
                                         description={`Current department is ${window.localStorage.getItem("department") ?? "not set"}`}
-                                        onClick={() => navigate(`/stores/${window.localStorage.getItem("store")}`)}
+                                        onPress={() => navigate(`/stores/${window.localStorage.getItem("store")}`)}
                                     >
                                         Change Department
                                     </DropdownItem>
@@ -115,7 +122,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                     key="change-store"
                                     closeOnSelect={true}
                                     description={`Current store is ${window.localStorage.getItem("store") ?? "not set"}`}
-                                    onClick={() => navigate("/stores/")}
+                                    onPress={() => navigate("/stores/")}
                                 >
                                     Change Store
                                 </DropdownItem>
@@ -128,7 +135,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                             key="view-list"
                                             closeOnSelect={true}
                                             description={"View the full list of items."}
-                                            onClick={() => navigate("/list")}
+                                            onPress={() => navigate("/list")}
                                         >
                                             View Full List
                                         </DropdownItem>
@@ -136,7 +143,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                             key="export-list"
                                             closeOnSelect={true}
                                             description={"Export the full list of items to a CSV file."}
-                                            onClick={() =>
+                                            onPress={() =>
                                             {
                                                 const link = document.createElement("a");
                                                 link.href = "https://yeinv.mardens.com/api/export";
@@ -145,6 +152,18 @@ export default function Navigation({employee}: { employee: Employee | null })
                                             }}
                                         >
                                             Export List
+                                        </DropdownItem>
+
+                                        <DropdownItem
+                                            key="toggle-readonly"
+                                            closeOnSelect={false}
+                                            description={`${isReadonly ? "Disable" : "Enable"} readonly mode.`}
+                                            onPress={() =>
+                                            {
+                                                toggle_readonly().then(setIsReadonly);
+                                            }}
+                                        >
+                                            {isReadonly ? "Disable" : "Enable"} Readonly
                                         </DropdownItem>
                                     </DropdownSection>
                                 }
@@ -157,7 +176,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                             className="text-danger"
                                             closeOnSelect={true}
                                             description={"This will delete all items in the database."}
-                                            onClick={onOpen}
+                                            onPress={onOpen}
                                         >
                                             Truncate
                                         </DropdownItem>) as any
@@ -168,7 +187,7 @@ export default function Navigation({employee}: { employee: Employee | null })
                                         className="text-danger"
                                         closeOnSelect={true}
                                         description={"Logout from the current session."}
-                                        onClick={() =>
+                                        onPress={() =>
                                         {
                                             auth.logout();
                                             window.localStorage.removeItem("profile");
