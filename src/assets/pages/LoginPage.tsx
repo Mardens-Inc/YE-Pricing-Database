@@ -32,6 +32,7 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
         {
             if (response !== false && typeof response === "object" && (response as LoginResponse).success)
             {
+
                 navigate("/stores/");
             }
         } catch (e)
