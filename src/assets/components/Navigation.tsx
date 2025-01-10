@@ -8,7 +8,7 @@ import {useEffect, useState} from "react";
 import {Employee} from "../ts/useEmployeeList.ts";
 import ConfirmModal from "./ConfirmModal.tsx";
 import Records from "../ts/records.ts";
-import {is_readonly, toggle_readonly} from "../ts/readonly.ts";
+import {useReadonly} from "../providers/Readonly.tsx";
 
 export default function Navigation({employee}: { employee: Employee | null })
 {
@@ -17,11 +17,11 @@ export default function Navigation({employee}: { employee: Employee | null })
     const navigate = useNavigate();
     const [emp, setEmployee] = useState<Employee | null>(employee);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isReadonly, setIsReadonly] = useState(false);
+    const {readonly, toggleReadonly} = useReadonly();
 
     useEffect(() =>
     {
-        is_readonly().then(setIsReadonly);
+        toggleReadonly();
     }, []);
 
     const {onOpenChange, isOpen, onOpen} = useDisclosure();
@@ -157,13 +157,13 @@ export default function Navigation({employee}: { employee: Employee | null })
                                         <DropdownItem
                                             key="toggle-readonly"
                                             closeOnSelect={false}
-                                            description={`${isReadonly ? "Disable" : "Enable"} readonly mode.`}
-                                            onPress={() =>
+                                            description={`${readonly ? "Disable" : "Enable"} readonly mode.`}
+                                            onPress={async () =>
                                             {
-                                                toggle_readonly().then(setIsReadonly);
+                                                await toggleReadonly();
                                             }}
                                         >
-                                            {isReadonly ? "Disable" : "Enable"} Readonly
+                                            {readonly ? "Disable" : "Enable"} Readonly
                                         </DropdownItem>
                                     </DropdownSection>
                                 }
