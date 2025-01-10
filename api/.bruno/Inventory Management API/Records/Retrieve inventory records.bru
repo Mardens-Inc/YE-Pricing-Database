@@ -5,16 +5,16 @@ meta {
 }
 
 get {
-  url: {{base_url}}/
+  url: {{base_url}}/?limit=100&page=2&sort=store
   body: none
   auth: none
 }
 
 params:query {
+  limit: 100
+  page: 2
+  sort: store
   ~query: 
-  ~limit: 
-  ~page: 
-  ~sort: 
   ~asc: 
   ~employee: 
   ~store: 
