@@ -15,6 +15,7 @@ import ProcessingPage from "./assets/pages/ProcessingPage.tsx";
 import {cacheEmployees, Employee} from "./assets/ts/useEmployeeList.ts";
 import FullListPage from "./assets/pages/FullListPage.tsx";
 import {AlertModalProvider, useAlertModal} from "./assets/providers/AlertModalProvider.tsx";
+import {ReadonlyProvider} from "./assets/providers/Readonly.tsx";
 
 applyTheme();
 
@@ -22,7 +23,9 @@ ReactDOM.createRoot($("#root")[0]!).render(
     <React.StrictMode>
         <BrowserRouter>
             <AlertModalProvider>
-                <PageContent/>
+                <ReadonlyProvider>
+                    <PageContent/>
+                </ReadonlyProvider>
             </AlertModalProvider>
         </BrowserRouter>
     </React.StrictMode>
@@ -49,6 +52,8 @@ function PageContent()
             {
                 if (!response.ok)
                     throw new Error("System is Offline");
+
+
             })
             .catch(() =>
             {
