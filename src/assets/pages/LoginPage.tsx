@@ -26,13 +26,12 @@ export default function LoginPage({onLogin}: { onLogin: (username: string, passw
     const [loggingIn, setLoggingIn] = useState(false);
     const navigate = useNavigate();
 
-    auth.loginWithTokenFromCookie().then(response =>
+    auth.loginWithTokenFromCookie().then(async response =>
     {
         try
         {
             if (response !== false && typeof response === "object" && (response as LoginResponse).success)
             {
-
                 navigate("/stores/");
             }
         } catch (e)
