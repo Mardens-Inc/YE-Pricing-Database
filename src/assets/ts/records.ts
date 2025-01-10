@@ -39,6 +39,8 @@ export interface RecordSearchOptions
     period?: DateRange;
     limit?: number;
     page?: number;
+    sort_column?: "id" | "tag" | "store" | "department" | "percent" | "mardens_price" | "quantity" | "employee" | "description" | "created_at" | "updated_at";
+    sort_direction?: "asc" | "desc";
     abortSignal?: AbortSignal;
 }
 
@@ -54,6 +56,8 @@ export const DEFAULT_RECORD_SEARCH_OPTIONS: RecordSearchOptions = {
     department: undefined,
     employee: undefined,
     query: undefined,
+    sort_column: undefined,
+    sort_direction: "asc",
     abortSignal: new AbortController().signal
 };
 
@@ -78,9 +82,10 @@ export default class Records
             uri.searchParams.append("from", options.period!.from.toISOString());
             uri.searchParams.append("to", options.period!.to.toISOString());
         }
-        uri.searchParams.append("asc", "false");
         if (options.limit) uri.searchParams.append("limit", options.limit.toString());
         if (options.page) uri.searchParams.append("page", options.page.toString());
+        if (options.sort_column) uri.searchParams.append("sort", options.sort_column);
+        if (options.sort_direction) uri.searchParams.append("asc", options.sort_direction === "asc" ? "true" : "false");
         return fetch(uri.toString(), {signal: options.abortSignal}).then(response => response.json());
     }
 
