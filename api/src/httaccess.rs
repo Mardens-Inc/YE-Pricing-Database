@@ -123,13 +123,31 @@ pub async fn truncate(config: Data<DatabaseConfig>) -> HttpResponse {
 }
 
 #[get("/export")]
-pub async fn export(config: Data<DatabaseConfig>) -> impl Responder {
-    match db_access::export(config).await {
-        Ok(result) => HttpResponse::Ok()
+pub async fn export(config: Data<DatabaseConfig>, request: HttpRequest) -> impl Responder {
+    // Create a HashMap to hold query string parameters
+    let params: HashMap<&str, &str> = request
+        .query_string()
+        .split("&")
+        .map(|x| {
+            // Split each parameter into key and value
+            let mut split = x.split("=");
+            (split.next().unwrap(), split.next().unwrap_or(""))
+        })
+        .collect();
+
+    // Extract parameters from the hashmap or use default values where necessary
+    let query: Option<String> = params.get("query").map(|x| x.to_string());
+    let employee: Option<u64> = params.get("employee").and_then(|x| x.parse().ok());
+    let store: Option<u64> = params.get("store").and_then(|x| x.parse().ok());
+    let department: Option<u64> = params.get("department").and_then(|x| x.parse().ok());
+
+
+    match db_access::export(config, query, employee, store, department).await {
+        Ok((result, filename)) => HttpResponse::Ok()
             .insert_header(("Content-Type", "text/csv"))
             .insert_header((
                 "Content-Disposition",
-                "attachment; filename=years-end-inventory-db-export.csv",
+                format!("attachment; filename={}.csv", filename),
             ))
             .body(result),
         Err(e) => HttpResponse::InternalServerError().json(json!({"error": e})),
