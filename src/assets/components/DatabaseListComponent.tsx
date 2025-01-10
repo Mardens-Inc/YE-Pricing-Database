@@ -1,4 +1,4 @@
-import {Badge, Button, cn, getKeyValue, Pagination, Selection, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip} from "@nextui-org/react";
+import {Badge, Button, cn, getKeyValue, Pagination, Selection, SortDescriptor, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip} from "@nextui-org/react";
 import {EditIcon, TrashIcon} from "./Icons.tsx";
 import {useEffect, useRef, useState} from "react";
 import ConfirmModal from "./ConfirmModal.tsx";
@@ -9,6 +9,7 @@ import Stores from "../ts/stores.ts";
 import {all_departments} from "../pages/DepartmentsPage.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import {useReadonly} from "../providers/Readonly.tsx";
 
 
 export interface DatabaseRow
@@ -45,6 +46,12 @@ export default function DatabaseListComponent(props: DatabaseListProps)
     const [pages, setPages] = useState(1);
     const [page, setPage] = useState(1);
     const [shouldDeleteSelected, setShouldDeleteSelected] = useState<boolean>(false);
+    const {readonly} = useReadonly();
+    const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>(
+        {
+            column: "id",
+            direction: "ascending"
+        });
 
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -66,6 +73,8 @@ export default function DatabaseListComponent(props: DatabaseListProps)
             store: props.store ? Stores.getStores().filter(store => store.name.toLowerCase() === props.store!.toLowerCase())[0].id : undefined,
             department: props.department ? all_departments.findIndex(department => department.name.toLowerCase() === props.department!.toLowerCase()) : undefined,
             limit: props.limit ?? 10,
+            sort_column: sortDescriptor.column as "id" | "employee" | "tag" | "store" | "department" | "percent" | "mardens_price" | "quantity" | "description" | "created_at" | "updated_at" | undefined,
+            sort_direction: sortDescriptor.direction === "ascending" ? "asc" : "desc",
             abortSignal: abortControllerRef.current.signal
         }).then(async result =>
         {
@@ -83,13 +92,17 @@ export default function DatabaseListComponent(props: DatabaseListProps)
     {
         refresh();
         console.log("Page is ", page);
-    }, [page, props.isRefreshing]);
+    }, [page, readonly, props.isRefreshing]);
 
     useEffect(() =>
     {
         console.log("Items changed to ", items);
     }, [items]);
 
+    useEffect(() =>
+    {
+        refresh();
+    }, [sortDescriptor]);
 
     return (
         <>
@@ -135,7 +148,6 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                             }));
                             setSelectedIds([]);
                             refresh();
-                            refresh();
                         }
                     }
                     setDeletingId(null);
@@ -177,11 +189,11 @@ export default function DatabaseListComponent(props: DatabaseListProps)
             <Table
                 aria-label={"Database Table"}
                 isHeaderSticky
-                selectionMode={"multiple"}
+                selectionMode={readonly ? "none" : "multiple"}
                 selectedKeys={selectedIds.map(String)}
                 onSelectionChange={(keys: Selection) =>
                 {
-                    let ids: number[] = [];
+                    let ids: number[];
                     if (keys === "all")
                     {
                         ids = items.map(item => item.id);
@@ -192,7 +204,7 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                     setSelectedIds(ids);
                 }}
                 classNames={{
-                    wrapper: "w-[90%] mx-auto mb-10 h-[80vh]",
+                    wrapper: "w-[90%] mx-auto mb-4 h-[calc(100dvh_-_200px)]",
                     tbody: cn(
                         `overflow-y-scroll relative`
                     )
@@ -200,69 +212,22 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                 checkboxesProps={{
                     className: "w-0"
                 }}
-                bottomContent={
-                    (() =>
-                    {
-                        let pagination = (<></>);
-                        if (pages >= 1)
-                            pagination = (
-                                <Pagination
-                                    isCompact
-                                    showControls
-                                    showShadow
-                                    color={"primary"}
-                                    total={pages}
-                                    page={page}
-                                    onChange={(page) => setPage(page)}
-                                />
-                            );
+                sortDescriptor={sortDescriptor}
+                onSortChange={setSortDescriptor}
 
-                        let actions = (<></>);
-
-                        if (selectedIds.length > 0)
-                        {
-                            actions = (
-                                <div className={"flex flex-row gap-3"}>
-                                    <Badge content={selectedIds.length}>
-                                        <Tooltip content={`Delete ${selectedIds.length} records`}>
-                                            <Button
-                                                color={"danger"}
-                                                className={"w-[2.5rem] h-[2.5rem] min-w-[2.5rem] min-h-[2.5rem]"}
-                                                onClick={async () =>
-                                                {
-                                                    setShouldDeleteSelected(true);
-                                                }}
-                                            >
-                                                <FontAwesomeIcon icon={faTrash}/>
-                                            </Button>
-                                        </Tooltip>
-                                    </Badge>
-                                </div>
-                            );
-                        }
-
-
-                        return (
-                            <div className={"flex w-full justify-center gap-4"}>
-                                {pagination}
-                                {actions}
-                            </div>
-                        );
-                    })()
-                }
             >
                 <TableHeader>
-                    <TableColumn key={"tag_number"}>Tag#</TableColumn>
-                    <TableColumn key={"store"}>Store</TableColumn>
-                    <TableColumn key={"department"}>Department</TableColumn>
-                    <TableColumn key={"description"}>Description</TableColumn>
-                    <TableColumn key={"percent"}>Percent</TableColumn>
-                    <TableColumn key={"mardens_price"}>Mardens Price</TableColumn>
-                    <TableColumn key={"employee"}>Employee</TableColumn>
-                    <TableColumn key={"quantity"}>Quantity</TableColumn>
-                    <TableColumn key={"actions"}>Actions</TableColumn>
+                    <TableColumn key={"tag_number"} allowsSorting>Tag#</TableColumn>
+                    <TableColumn key={"store"} allowsSorting>Store</TableColumn>
+                    <TableColumn key={"department"} allowsSorting>Department</TableColumn>
+                    <TableColumn key={"description"} allowsSorting>Description</TableColumn>
+                    <TableColumn key={"percent"} allowsSorting>Percent</TableColumn>
+                    <TableColumn key={"mardens_price"} allowsSorting>Mardens Price</TableColumn>
+                    <TableColumn key={"employee"} allowsSorting>Employee</TableColumn>
+                    <TableColumn key={"quantity"} allowsSorting>Quantity</TableColumn>
+                    <TableColumn key={"actions"} hidden={readonly} allowsSorting={false}>Actions</TableColumn>
                 </TableHeader>
-                <TableBody items={items}>
+                <TableBody items={items} isLoading={true} emptyContent={"No records found"} loadingContent={"Loading..."}>
                     {item => (
                         <TableRow key={item.id}>
                             {key =>
@@ -284,14 +249,14 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                                 } else if (key === "actions")
                                 {
                                     return (
-                                        <TableCell className={"w-0"}>
+                                        <TableCell className={"w-0 data-[hidden=true]:hidden"} data-hidden={readonly}>
                                             <div className={"w-auto flex flex-row"}>
                                                 <Tooltip content={"Edit this record"}>
                                                     <Button
                                                         variant={"light"}
                                                         className={"max-w-[48px] w-[48px] min-w-[48px]"}
                                                         radius={"full"}
-                                                        onClick={() =>
+                                                        onPress={() =>
                                                         {
                                                             setEditingRecord(item);
                                                         }}
@@ -305,7 +270,7 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                                                         color={"danger"}
                                                         className={"max-w-[48px] w-[48px] min-w-[48px]"}
                                                         radius={"full"}
-                                                        onClick={() =>
+                                                        onPress={() =>
                                                         {
                                                             setDeletingId(item.id);
                                                         }}
@@ -323,6 +288,56 @@ export default function DatabaseListComponent(props: DatabaseListProps)
                     )}
                 </TableBody>
             </Table>
+            {
+                (() =>
+                {
+                    let pagination = (<></>);
+                    if (pages >= 1)
+                        pagination = (
+                            <Pagination
+                                showControls
+                                showShadow
+                                radius={"md"}
+                                color={"primary"}
+                                total={pages}
+                                page={page}
+                                onChange={(page) => setPage(page)}
+                            />
+                        );
+
+                    let actions = (<></>);
+
+                    if (selectedIds.length > 0)
+                    {
+                        actions = (
+                            <div className={"flex flex-row gap-3"}>
+                                <Badge content={selectedIds.length}>
+                                    <Tooltip content={`Delete ${selectedIds.length} records`}>
+                                        <Button
+                                            color={"danger"}
+                                            className={"w-[2.5rem] h-[2.5rem] min-w-[2.5rem] min-h-[2.5rem]"}
+                                            onPress={async () =>
+                                            {
+                                                setShouldDeleteSelected(true);
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faTrash}/>
+                                        </Button>
+                                    </Tooltip>
+                                </Badge>
+                            </div>
+                        );
+                    }
+
+
+                    return (
+                        <div className={"flex w-full justify-center gap-4"}>
+                            {pagination}
+                            {actions}
+                        </div>
+                    );
+                })()
+            }
         </>
     );
 
