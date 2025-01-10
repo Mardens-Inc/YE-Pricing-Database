@@ -24,7 +24,11 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
 
     const handleSelectionChange = async (item: string | null) =>
     {
-        if (!item) return;
+        if (!item)
+        {
+            if (onSelectionChange) onSelectionChange(null);
+            return;
+        }
         try
         {
             const response = await fetch(`https://employees.mardens.com/api/${item}`);
@@ -63,6 +67,7 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
             isInvalid={errorMessage !== ""}
             errorMessage={errorMessage}
             className={className}
+            isClearable={false}
             clearButtonProps={{
                 onClick: () =>
                 {
@@ -73,6 +78,8 @@ export default function EmployeesAutocomplete({onSelectionChange, error, label, 
             {
                 if (value !== search)
                     setSearch(value);
+                else
+                    setSearch(undefined);
             }}
             onSelectionChange={(key) => handleSelectionChange(key as string | null)}
             scrollShadowProps={{
