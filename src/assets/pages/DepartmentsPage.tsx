@@ -15,19 +15,20 @@ import StoresPage from "./StoresPage.tsx";
 
 export interface Department
 {
+    id: number,
     name: string,
     image: string,
 }
 
 export const all_departments: Department[] = [
-    {name: "Clothing", image: clothing},
-    {name: "Shoes", image: shoes},
-    {name: "Hardware", image: hardware},
-    {name: "Furniture", image: furniture},
-    {name: "Flooring", image: flooring},
-    {name: "Fabric", image: fabric},
-    {name: "General", image: general},
-    {name: "Food", image: food}
+    {id: 0, name: "Clothing", image: clothing},
+    {id: 1, name: "Shoes", image: shoes},
+    {id: 2, name: "Hardware", image: hardware},
+    {id: 3, name: "Furniture", image: furniture},
+    {id: 4, name: "Flooring", image: flooring},
+    {id: 5, name: "Fabric", image: fabric},
+    {id: 6, name: "General", image: general},
+    {id: 7, name: "Food", image: food}
 ];
 
 export default function DepartmentsPage()
